@@ -1,9 +1,8 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-
+import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 
 import '../core/app_export.dart';
 
@@ -28,7 +27,8 @@ enum ImageType { svg, png, network, networkSvg, file, unknown }
 
 class CustomImageView extends StatelessWidget {
   CustomImageView({
-    this.imagePath,
+    Key? key,
+    String? imagePath,
     this.height,
     this.width,
     this.color,
@@ -39,14 +39,13 @@ class CustomImageView extends StatelessWidget {
     this.margin,
     this.border,
     this.placeHolder,
-  }) {
-    if (imagePath == null || imagePath!.isEmpty) {
-      imagePath = ImageConstant.imgImageNotFound;
-    }
-  }
+  })  : imagePath = (imagePath == null || imagePath.isEmpty)
+            ? ImageConstant.imgImageNotFound
+            : imagePath,
+        super(key: key);
 
   ///[imagePath] is required parameter for showing image
-  late String? imagePath;
+  final String imagePath;
 
   final double? height;
 
@@ -78,7 +77,10 @@ class CustomImageView extends StatelessWidget {
   Widget _buildWidget() {
     return Padding(
       padding: margin ?? EdgeInsets.zero,
-      child: InkWell(onTap: onTap, child: _buildCircleImage()),
+      child: InkWell(
+        onTap: onTap,
+        child: _buildCircleImage(),
+      ),
     );
   }
 
@@ -98,7 +100,10 @@ class CustomImageView extends StatelessWidget {
   _buildImageWithBorder() {
     if (border != null) {
       return Container(
-        decoration: BoxDecoration(border: border, borderRadius: radius),
+        decoration: BoxDecoration(
+          border: border,
+          borderRadius: radius,
+        ),
         child: _buildImageView(),
       );
     } else {
@@ -107,28 +112,25 @@ class CustomImageView extends StatelessWidget {
   }
 
   Widget _buildImageView() {
-    switch (imagePath!.imageType) {
+    switch (imagePath.imageType) {
       case ImageType.svg:
         return Container(
           height: height,
           width: width,
           child: SvgPicture.asset(
-            imagePath!,
+            imagePath,
             height: height,
             width: width,
             fit: fit ?? BoxFit.contain,
-            colorFilter:
-                this.color != null
-                    ? ColorFilter.mode(
-                      this.color ?? appTheme.transparentCustom,
-                      BlendMode.srcIn,
-                    )
-                    : null,
+            colorFilter: this.color != null
+                ? ColorFilter.mode(
+                    this.color ?? appTheme.transparentCustom, BlendMode.srcIn)
+                : null,
           ),
         );
       case ImageType.file:
         return Image.file(
-          File(imagePath!),
+          File(imagePath),
           height: height,
           width: width,
           fit: fit ?? BoxFit.cover,
@@ -136,46 +138,41 @@ class CustomImageView extends StatelessWidget {
         );
       case ImageType.networkSvg:
         return SvgPicture.network(
-          imagePath!,
+          imagePath,
           height: height,
           width: width,
           fit: fit ?? BoxFit.contain,
-          colorFilter:
-              this.color != null
-                  ? ColorFilter.mode(
-                    this.color ?? appTheme.transparentCustom,
-                    BlendMode.srcIn,
-                  )
-                  : null,
+          colorFilter: this.color != null
+              ? ColorFilter.mode(
+                  this.color ?? appTheme.transparentCustom, BlendMode.srcIn)
+              : null,
         );
       case ImageType.network:
         return CachedNetworkImage(
           height: height,
           width: width,
           fit: fit,
-          imageUrl: imagePath!,
+          imageUrl: imagePath,
           color: color,
-          placeholder:
-              (context, url) => Container(
-                height: 30,
-                width: 30,
-                child: LinearProgressIndicator(
-                  color: appTheme.grey200,
-                  backgroundColor: appTheme.grey100,
-                ),
-              ),
-          errorWidget:
-              (context, url, error) => Image.asset(
-                placeHolder ?? ImageConstant.imgImageNotFound,
-                height: height,
-                width: width,
-                fit: fit ?? BoxFit.cover,
-              ),
+          placeholder: (context, url) => Container(
+            height: 30,
+            width: 30,
+            child: LinearProgressIndicator(
+              color: appTheme.grey200,
+              backgroundColor: appTheme.grey100,
+            ),
+          ),
+          errorWidget: (context, url, error) => Image.asset(
+            placeHolder ?? ImageConstant.imgImageNotFound,
+            height: height,
+            width: width,
+            fit: fit ?? BoxFit.cover,
+          ),
         );
       case ImageType.png:
       default:
         return Image.asset(
-          imagePath!,
+          imagePath,
           height: height,
           width: width,
           fit: fit ?? BoxFit.cover,

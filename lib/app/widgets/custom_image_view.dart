@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:laporin/app/core/utils/image_constant.dart';
+import 'package:laporin/app/theme/theme_helper.dart';
 
 import '../core/app_export.dart';
 
@@ -26,18 +28,19 @@ extension ImageTypeExtension on String {
 enum ImageType { svg, png, network, networkSvg, file, unknown }
 
 class CustomImageView extends StatelessWidget {
-  CustomImageView(
-      {this.imagePath,
-      this.height,
-      this.width,
-      this.color,
-      this.fit,
-      this.alignment,
-      this.onTap,
-      this.radius,
-      this.margin,
-      this.border,
-      this.placeHolder}) {
+  CustomImageView({
+    this.imagePath,
+    this.height,
+    this.width,
+    this.color,
+    this.fit,
+    this.alignment,
+    this.onTap,
+    this.radius,
+    this.margin,
+    this.border,
+    this.placeHolder,
+  }) {
     if (imagePath == null || imagePath!.isEmpty) {
       imagePath = ImageConstant.imgImageNotFound;
     }
@@ -76,10 +79,7 @@ class CustomImageView extends StatelessWidget {
   Widget _buildWidget() {
     return Padding(
       padding: margin ?? EdgeInsets.zero,
-      child: InkWell(
-        onTap: onTap,
-        child: _buildCircleImage(),
-      ),
+      child: InkWell(onTap: onTap, child: _buildCircleImage()),
     );
   }
 
@@ -99,10 +99,7 @@ class CustomImageView extends StatelessWidget {
   _buildImageWithBorder() {
     if (border != null) {
       return Container(
-        decoration: BoxDecoration(
-          border: border,
-          borderRadius: radius,
-        ),
+        decoration: BoxDecoration(border: border, borderRadius: radius),
         child: _buildImageView(),
       );
     } else {
@@ -121,10 +118,13 @@ class CustomImageView extends StatelessWidget {
             height: height,
             width: width,
             fit: fit ?? BoxFit.contain,
-            colorFilter: this.color != null
-                ? ColorFilter.mode(
-                    this.color ?? appTheme.transparentCustom, BlendMode.srcIn)
-                : null,
+            colorFilter:
+                this.color != null
+                    ? ColorFilter.mode(
+                      this.color ?? appTheme.transparentCustom,
+                      BlendMode.srcIn,
+                    )
+                    : null,
           ),
         );
       case ImageType.file:
@@ -141,10 +141,13 @@ class CustomImageView extends StatelessWidget {
           height: height,
           width: width,
           fit: fit ?? BoxFit.contain,
-          colorFilter: this.color != null
-              ? ColorFilter.mode(
-                  this.color ?? appTheme.transparentCustom, BlendMode.srcIn)
-              : null,
+          colorFilter:
+              this.color != null
+                  ? ColorFilter.mode(
+                    this.color ?? appTheme.transparentCustom,
+                    BlendMode.srcIn,
+                  )
+                  : null,
         );
       case ImageType.network:
         return CachedNetworkImage(
@@ -153,20 +156,22 @@ class CustomImageView extends StatelessWidget {
           fit: fit,
           imageUrl: imagePath!,
           color: color,
-          placeholder: (context, url) => Container(
-            height: 30,
-            width: 30,
-            child: LinearProgressIndicator(
-              color: appTheme.grey200,
-              backgroundColor: appTheme.grey100,
-            ),
-          ),
-          errorWidget: (context, url, error) => Image.asset(
-            placeHolder ?? ImageConstant.imgImageNotFound,
-            height: height,
-            width: width,
-            fit: fit ?? BoxFit.cover,
-          ),
+          placeholder:
+              (context, url) => Container(
+                height: 30,
+                width: 30,
+                child: LinearProgressIndicator(
+                  color: appTheme.grey200,
+                  backgroundColor: appTheme.grey100,
+                ),
+              ),
+          errorWidget:
+              (context, url, error) => Image.asset(
+                placeHolder ?? ImageConstant.imgImageNotFound,
+                height: height,
+                width: width,
+                fit: fit ?? BoxFit.cover,
+              ),
         );
       case ImageType.png:
       default:

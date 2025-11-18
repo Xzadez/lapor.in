@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:laporin/app/core/utils/size.utils.dart';
+import 'package:laporin/app/theme/text_style_helper.dart';
 
 import '../core/app_export.dart';
 
@@ -47,16 +49,14 @@ class CustomButton extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.h),
           ),
-          padding: EdgeInsets.symmetric(
-            vertical: 12.h,
-            horizontal: 30.h,
-          ),
+          padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 30.h),
           elevation: 0,
         ),
         child: Text(
           text ?? "Button",
-          style: TextStyleHelper.instance.body14SemiBoldInter
-              .copyWith(color: textColor ?? Color(0xFF000000)),
+          style: TextStyleHelper.instance.body14SemiBoldInter.copyWith(
+            color: textColor ?? Color(0xFF000000),
+          ),
         ),
       ),
     );

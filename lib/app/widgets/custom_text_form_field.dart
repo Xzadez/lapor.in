@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:laporin/app/core/utils/size.utils.dart';
+import 'package:laporin/app/theme/text_style_helper.dart';
+import 'package:laporin/app/theme/theme_helper.dart';
 
 import '../core/app_export.dart';
 import './custom_image_view.dart';
@@ -100,11 +103,15 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         obscureText: widget.isPasswordField ? _isObscured : false,
         validator: widget.validator,
         style: TextStyleHelper.instance.label11RegularInter.copyWith(
-            color: widget.textColor ?? Color(0xFFFFFFFF), height: (14 / 11)),
+          color: widget.textColor ?? Color(0xFFFFFFFF),
+          height: (14 / 11),
+        ),
         decoration: InputDecoration(
           hintText: widget.placeholder ?? '',
           hintStyle: TextStyleHelper.instance.label11RegularInter.copyWith(
-              color: widget.textColor ?? Color(0xFFFFFFFF), height: (14 / 11)),
+            color: widget.textColor ?? Color(0xFFFFFFFF),
+            height: (14 / 11),
+          ),
           filled: true,
           fillColor: widget.backgroundColor ?? Color(0x47D9D9D9),
           contentPadding: EdgeInsets.only(
@@ -136,34 +143,30 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8.h),
-            borderSide: BorderSide(
-              color: appTheme.red_A700,
-              width: 1.h,
-            ),
+            borderSide: BorderSide(color: appTheme.red_A700, width: 1.h),
           ),
           focusedErrorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8.h),
-            borderSide: BorderSide(
-              color: appTheme.red_A700,
-              width: 1.h,
-            ),
+            borderSide: BorderSide(color: appTheme.red_A700, width: 1.h),
           ),
-          suffixIcon: widget.suffixIconPath != null
-              ? GestureDetector(
-                  onTap: widget.isPasswordField
-                      ? _togglePasswordVisibility
-                      : widget.onSuffixIconTap,
-                  child: Container(
-                    padding: EdgeInsets.all(12.h),
-                    child: CustomImageView(
-                      imagePath: widget.suffixIconPath!,
-                      height: 20.h,
-                      width: 24.h,
-                      fit: BoxFit.contain,
+          suffixIcon:
+              widget.suffixIconPath != null
+                  ? GestureDetector(
+                    onTap:
+                        widget.isPasswordField
+                            ? _togglePasswordVisibility
+                            : widget.onSuffixIconTap,
+                    child: Container(
+                      padding: EdgeInsets.all(12.h),
+                      child: CustomImageView(
+                        imagePath: widget.suffixIconPath!,
+                        height: 20.h,
+                        width: 24.h,
+                        fit: BoxFit.contain,
+                      ),
                     ),
-                  ),
-                )
-              : null,
+                  )
+                  : null,
         ),
       ),
     );

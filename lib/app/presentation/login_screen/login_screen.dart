@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:get/get_state_manager/src/simple/get_view.dart';
+import 'package:laporin/app/core/utils/image_constant.dart';
+import 'package:laporin/app/core/utils/size.utils.dart';
+import 'package:laporin/app/theme/text_style_helper.dart';
+import 'package:laporin/app/theme/theme_helper.dart';
 
 import '../../core/app_export.dart';
 import '../../widgets/custom_button.dart';
@@ -19,10 +25,7 @@ class LoginScreen extends GetWidget<LoginController> {
           gradient: LinearGradient(
             begin: Alignment(-0.85, -0.53),
             end: Alignment(0.85, 0.53),
-            colors: [
-              Color(0xFFABBBD2),
-              appTheme.colorB5E558,
-            ],
+            colors: [Color(0xFFABBBD2), appTheme.colorB5E558],
           ),
         ),
         child: Form(
@@ -32,11 +35,7 @@ class LoginScreen extends GetWidget<LoginController> {
               Expanded(
                 child: Container(
                   width: double.infinity,
-                  padding: EdgeInsets.only(
-                    top: 76.h,
-                    left: 32.h,
-                    right: 32.h,
-                  ),
+                  padding: EdgeInsets.only(top: 76.h, left: 32.h, right: 32.h),
                   child: Column(
                     children: [
                       CustomImageView(
@@ -58,7 +57,9 @@ class LoginScreen extends GetWidget<LoginController> {
                           'Silahkan login terlebih dahulu',
                           style: TextStyleHelper.instance.label11RegularInter
                               .copyWith(
-                                  color: appTheme.white_A700, height: 1.27),
+                                color: appTheme.white_A700,
+                                height: 1.27,
+                              ),
                         ),
                       ),
                       CustomTextFormField(
@@ -76,17 +77,19 @@ class LoginScreen extends GetWidget<LoginController> {
                       Obx(() {
                         return controller.showEmailError.value
                             ? Container(
-                                alignment: Alignment.centerLeft,
-                                margin: EdgeInsets.only(left: 4.h),
-                                child: Text(
-                                  '*Silahkan masukkan email terlebih dahulu',
-                                  style: TextStyleHelper
-                                      .instance.label11RegularInter
-                                      .copyWith(
-                                          color: appTheme.colorB7FF00,
-                                          height: 1.27),
-                                ),
-                              )
+                              alignment: Alignment.centerLeft,
+                              margin: EdgeInsets.only(left: 4.h),
+                              child: Text(
+                                '*Silahkan masukkan email terlebih dahulu',
+                                style: TextStyleHelper
+                                    .instance
+                                    .label11RegularInter
+                                    .copyWith(
+                                      color: appTheme.colorB7FF00,
+                                      height: 1.27,
+                                    ),
+                              ),
+                            )
                             : SizedBox.shrink();
                       }),
                       CustomTextFormField(
@@ -114,7 +117,9 @@ class LoginScreen extends GetWidget<LoginController> {
                             'Lupa password?',
                             style: TextStyleHelper.instance.label11RegularInter
                                 .copyWith(
-                                    color: appTheme.white_A700, height: 1.27),
+                                  color: appTheme.white_A700,
+                                  height: 1.27,
+                                ),
                           ),
                         ),
                       ),
@@ -122,17 +127,19 @@ class LoginScreen extends GetWidget<LoginController> {
                         margin: EdgeInsets.only(top: 76.h),
                         child: Obx(() {
                           return CustomButton(
-                            text: controller.isLoading.value
-                                ? 'Loading...'
-                                : 'Login',
+                            text:
+                                controller.isLoading.value
+                                    ? 'Loading...'
+                                    : 'Login',
                             width: double.infinity,
                             backgroundColor: appTheme.blue_gray_100,
                             textColor: appTheme.black_900,
-                            onPressed: controller.isLoading.value
-                                ? null
-                                : () {
-                                    controller.onTapLogin();
-                                  },
+                            onPressed:
+                                controller.isLoading.value
+                                    ? null
+                                    : () {
+                                      controller.onTapLogin();
+                                    },
                           );
                         }),
                       ),

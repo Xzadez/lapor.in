@@ -1,5 +1,6 @@
-import '../../../core/app_export.dart';
+
 import '../models/app_navigation_model.dart';
+import 'package:get/get.dart';
 
 /// A controller class for the AppNavigationScreen.
 ///

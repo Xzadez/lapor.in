@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/app_export.dart';
-import '../models/login_model.dart';
+import '../model/login_model.dart';
 
 class LoginController extends GetxController {
   // Form key for validation

@@ -1,16 +1,28 @@
-# laporin
+# Lapor.in
 
-A new Flutter project.
+Lapor.in adalah aplikasi Android yang membantu masyarakat membuat laporan kepada petugas desa secara **terstruktur**, sekaligus memudahkan petugas desa/RT/RW dalam **mengelola laporan** secara cepat, transparan, dan efisien.
 
-## Getting Started
+Aplikasi ini dikembangkan untuk meningkatkan komunikasi dua arah antara warga dan perangkat desa, dengan sistem pelacakan laporan dan prioritas aduan.
 
-This project is a starting point for a Flutter application.
+---
 
-A few resources to get you started if this is your first Flutter project:
+## Fitur Utama
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- **Buat Laporan dengan Mudah**  
+  Warga dapat membuat laporan dengan foto, kategori, lokasi, dan deskripsi.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- **Pelacakan Status Laporan**  
+  Warga dapat melihat progres laporan:  
+  **Diajukan → Diproses → Selesai**
+
+- **Prioritas Laporan Darurat**  
+  Sistem membantu RT/RW memberi prioritas lebih tinggi pada laporan darurat.
+
+- **Notifikasi Otomatis**  
+  Notifikasi dikirim saat status laporan berubah.
+
+- **Panel Admin**  
+  Petugas dapat mengelola laporan, memperbarui status, dan memberi tindakan.
+
+- **Dashboard Monitoring (Coming Soon)**  
+  Statistik laporan per kategori, wilayah, dan waktu tanggap.

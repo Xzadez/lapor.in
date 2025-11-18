@@ -3,8 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:laporin/app/core/utils/image_constant.dart';
-import 'package:laporin/app/theme/theme_helper.dart';
+
 
 import '../core/app_export.dart';
 

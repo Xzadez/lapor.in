@@ -66,7 +66,7 @@ class LoginScreen extends GetWidget<LoginController> {
                         controller: controller.emailController,
                         placeholder: 'Email Address',
                         inputType: TextInputType.emailAddress,
-                        borderColor: appTheme.red_A700,
+                        borderColor: appTheme.white_A700,
                         backgroundColor: appTheme.color47D9D9,
                         textColor: appTheme.white_A700,
                         margin: EdgeInsets.only(top: 52.h),

@@ -24,8 +24,6 @@ Aplikasi ini dikembangkan untuk meningkatkan komunikasi dua arah antara warga da
 - **Panel Admin**  
   Petugas dapat mengelola laporan, memperbarui status, dan memberi tindakan.
 
-- **Dashboard Monitoring (Coming Soon)**  
-  Statistik laporan per kategori, wilayah, dan waktu tanggap.
 
 ---
 
@@ -40,3 +38,27 @@ Aplikasi ini dikembangkan untuk meningkatkan komunikasi dua arah antara warga da
 
 ## Link Figma
 https://www.figma.com/design/IPgFe8nbY6O2sOJpUfNYc7/Rekayasa-Interaksi?node-id=0-1&t=VPGfyfd0ajtyXR8K-1
+
+---
+
+## Worksheets
+1. Worksheet 1 : https://raw.githubusercontent.com/Xzadez/lapor.in/master/WS/ws1.pdf
+2. Worksheet 2 : https://raw.githubusercontent.com/Xzadez/lapor.in/master/WS/ws2.pdf
+3. Worksheet 3 : https://raw.githubusercontent.com/Xzadez/lapor.in/master/WS/ws3.pdf
+4. Worksheet 7 : https://raw.githubusercontent.com/Xzadez/lapor.in/master/WS/ws7.pdf
+5. Worksheet 9 : https://raw.githubusercontent.com/Xzadez/lapor.in/master/WS/ws9.pdf
+
+---
+
+## Low Fidelity Prototype
+https://raw.githubusercontent.com/Xzadez/lapor.in/master/LF/img1.png
+https://raw.githubusercontent.com/Xzadez/lapor.in/master/LF/img2.png
+
+---
+
+## Backlog (Sementara)
+| Role            | Login Page        | Profile Page | Detail Laporan Page |
+|-----------------|-------------------|--------------|-----------------------|
+| Product Owner   | Adriyan           | Satria       | Mauludin             |
+| Scrum Master    | Ziddan            | Rafly        | Ziddan Satria        |
+| Developer       | Mauludin, Rafly   | Adriyan      | Adriyan              |

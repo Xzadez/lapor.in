@@ -8,7 +8,7 @@ class ImageConstant {
 
   // Login Screen
   static String imgGroup15 = '${_basePath}img_group_15.svg';
-  static String imgTowers = '${_basePath}img_towers.png';
+  static String imgTowers = '${_basePath}logo.png';
 
   // Custom Image View Screen
   static String imgImageNotFound = '${_basePath}image_not_found.png';

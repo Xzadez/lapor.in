@@ -25,7 +25,7 @@ class LoginScreen extends GetWidget<LoginController> {
           gradient: LinearGradient(
             begin: Alignment(-0.85, -0.53),
             end: Alignment(0.85, 0.53),
-            colors: [Color(0xFFABBBD2), appTheme.colorB5E558],
+            colors: [Color(0xFFABBBD3), Color(0xFF5981B5)],
           ),
         ),
         child: Form(
@@ -39,7 +39,7 @@ class LoginScreen extends GetWidget<LoginController> {
                   child: Column(
                     children: [
                       CustomImageView(
-                        imagePath: ImageConstant.imgTowers,
+                        imagePath: 'assets/images/logo.png',
                         height: 44.h,
                         width: 44.h,
                       ),
@@ -66,7 +66,7 @@ class LoginScreen extends GetWidget<LoginController> {
                         controller: controller.emailController,
                         placeholder: 'Email Address',
                         inputType: TextInputType.emailAddress,
-                        borderColor: appTheme.red_A700,
+                        borderColor: appTheme.white_A700,
                         backgroundColor: appTheme.color47D9D9,
                         textColor: appTheme.white_A700,
                         margin: EdgeInsets.only(top: 52.h),

@@ -9,6 +9,9 @@ abstract class AppRoutes {
   static const profileScreen = '/profile_screen';
   static const detailLaporanScreen = '/detail_laporan_screen';
   static const welcomeScreen = '/welcome_screen';
+  static const homeScreen = '/home_screen';
+
+
 
 
 }

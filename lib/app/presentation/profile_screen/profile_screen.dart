@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'controller/profile_controller.dart';
+import '../../routes/app_routes.dart'; // Pastikan AppRoutes tersedia
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -23,18 +24,16 @@ class ProfileScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 50),
-
                     Row(
                       children: [
                         CircleAvatar(
                           radius: 30,
-                          // backgroundImage: user['photoUrl'] != null
-                          //     ? NetworkImage(user['photoUrl'])
-                          //     : null,
                           backgroundColor: Colors.grey.shade300,
                           child: user['photoUrl'] == null
                               ? const Icon(Icons.person, size: 40, color: Colors.white)
                               : null,
+                          // Jika ada URL foto:
+                          // backgroundImage: NetworkImage(user['photoUrl']),
                         ),
                         const SizedBox(width: 16),
                         Column(
@@ -58,9 +57,7 @@ class ProfileScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-
                     const SizedBox(height: 40),
-
                     ListTile(
                       leading: const Icon(Icons.person_outline),
                       title: Text(user['email'] ?? 'Email tidak tersedia'),
@@ -71,31 +68,17 @@ class ProfileScreen extends StatelessWidget {
                       title: const Text('Logout'),
                       onTap: controller.logout,
                     ),
-
                     const Spacer(),
                   ],
                 ),
               ),
             ),
-
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: CustomPaint(
-                size: Size(MediaQuery.of(context).size.width, 80),
-                painter: BottomNavPainterRight(),
-                child: SizedBox(
-                  height: 80,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      _buildNavItem(Icons.home_outlined, "Beranda"),
-                      _buildNavItem(Icons.assignment_outlined, "Laporan"),
-                      _buildNavItem(Icons.history, "Riwayat"),
-                      _buildActiveNavItem(Icons.person, "Profil"),
-                    ],
-                  ),
-                ),
-              ),
+            // Bottom navigation bar with bottom gap
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: _buildBottomNav(context),
             ),
           ],
         );
@@ -103,62 +86,83 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildNavItem(IconData icon, String label) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(icon, color: Colors.white, size: 24),
-        const SizedBox(height: 4),
-        Text(label, style: const TextStyle(color: Colors.white, fontSize: 12)),
-      ],
-    );
-  }
-
-  Widget _buildActiveNavItem(IconData icon, String label) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const SizedBox(height: 5),
-        Container(
-          height: 50,
-          width: 50,
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.circle,
-          ),
-          child: Icon(icon, color: Color(0xFF1E88E5), size: 28),
+  // ========================= Bottom Navigation =========================
+  Widget _buildBottomNav(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 8), // 👈 Tambahkan jarak bawah
+      height: 72,
+      decoration: const BoxDecoration(
+        color: Color(0xFF1E88E5),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(24),
+          topRight: Radius.circular(24),
         ),
-        const SizedBox(height: 2),
-        Text(label, style: const TextStyle(color: Colors.white, fontSize: 12)),
-      ],
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _buildNavItem(
+            icon: Icons.home,
+            label: 'Beranda',
+            onTap: () => Get.toNamed(AppRoutes.homeScreen),
+          ),
+          _buildNavItem(
+            icon: Icons.assignment_outlined,
+            label: 'Laporan',
+            onTap: () => Get.snackbar('Info', 'Halaman Laporan belum dibuat'),
+          ),
+          _buildNavItem(
+            icon: Icons.history,
+            label: 'Riwayat',
+            onTap: () => Get.snackbar('Info', 'Halaman Riwayat belum dibuat'),
+          ),
+          _buildNavItem(
+            icon: Icons.person,
+            label: 'Profil',
+            isActive: true,
+            onTap: () {}, // sudah di halaman ini
+          ),
+        ],
+      ),
     );
   }
-}
 
-class BottomNavPainterRight extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = const Color(0xFF1E88E5)
-      ..style = PaintingStyle.fill;
-
-    final path = Path();
-    path.moveTo(0, 0);
-    path.lineTo(size.width * 0.71, 0);
-    path.quadraticBezierTo(size.width * 0.78, 0, size.width * 0.78, 14);
-    path.arcToPoint(
-      Offset(size.width * 0.96, 14),
-      radius: const Radius.circular(16),
-      clockwise: false,
+  // ========================= Nav Item Widget =========================
+  Widget _buildNavItem({
+    required IconData icon,
+    required String label,
+    bool isActive = false,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            height: 40,
+            width: 40,
+            decoration: BoxDecoration(
+              color: isActive ? Colors.white : Colors.transparent,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              icon,
+              size: 22,
+              color: isActive ? const Color(0xFF1E88E5) : Colors.white,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 12,
+              color: Colors.white,
+            ),
+          )
+        ],
+      ),
     );
-    path.quadraticBezierTo(size.width * 0.98, 0, size.width, 0);
-    path.lineTo(size.width, size.height);
-    path.lineTo(0, size.height);
-    path.close();
-
-    canvas.drawPath(path, paint);
   }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

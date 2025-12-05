@@ -14,6 +14,8 @@ import 'package:laporin/app/presentation/home_screen/home_screen.dart';
 import 'package:laporin/app/presentation/home_screen/binding/home_binding.dart';
 import 'package:laporin/app/presentation/laporan_screen/laporan_screen.dart';
 import 'package:laporin/app/presentation/laporan_screen/binding/laporan_binding.dart';
+import 'package:laporin/app/presentation/riwayat_screen/riwayat_screen.dart';
+import 'package:laporin/app/presentation/riwayat_screen/binding/riwayat_binding.dart';
 
 
 import 'app_routes.dart';
@@ -22,7 +24,7 @@ class AppPages {
   AppPages._(); // Private constructor
 
   // static const INITIAL = AppRoutes.initialRoute;
-  static const INITIAL = AppRoutes.laporanScreen;
+  static const INITIAL = AppRoutes.riwayatScreen;
 
   // Ubah nama dari 'pages' menjadi 'routes'
   static final routes = [
@@ -66,7 +68,11 @@ class AppPages {
       page: () => const LaporanScreen(),
       binding: LaporanBinding(),
     ),
-
+    GetPage(
+      name: AppRoutes.riwayatScreen,
+      page: () => const RiwayatScreen(),
+      binding: RiwayatBinding(),
+    ),
   ];
 }
 

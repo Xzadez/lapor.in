@@ -12,6 +12,7 @@ abstract class AppRoutes {
   static const homeScreen = '/home_screen';
   static const laporanScreen = '/laporan_screen';
   static const riwayatScreen = '/riwayat_screen';
+  static const registerScreen = '/register_screen';
 
 
 

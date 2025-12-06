@@ -24,7 +24,7 @@ class AppPages {
   AppPages._(); // Private constructor
 
   // static const INITIAL = AppRoutes.initialRoute;
-  static const INITIAL = AppRoutes.riwayatScreen;
+  static const INITIAL = AppRoutes.laporanScreen;
 
   // Ubah nama dari 'pages' menjadi 'routes'
   static final routes = [

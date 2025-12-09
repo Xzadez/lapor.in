@@ -82,7 +82,6 @@ class RegisterScreen extends GetWidget<RegisterController> {
                         ),
                         SizedBox(height: 12.h),
 
-                        // Birth Day (Read Only + Tap Action)
                         GestureDetector(
                           onTap: () => controller.selectDate(context),
                           child: AbsorbPointer(
@@ -93,9 +92,7 @@ class RegisterScreen extends GetWidget<RegisterController> {
                               borderColor: appTheme.white_A700,
                               backgroundColor: appTheme.color47D9D9,
                               textColor: appTheme.white_A700,
-                              suffixIconPath:
-                                  ImageConstant
-                                      .imgPlaceholder, // Ganti icon calendar jika ada
+                              suffixIcon: Icons.calendar_month,
                               validator:
                                   (value) => controller.validateRequired(
                                     value,
@@ -182,9 +179,7 @@ class RegisterScreen extends GetWidget<RegisterController> {
                                     : () => controller.onTapRegister(),
                           );
                         }),
-                        SizedBox(
-                          height: 40.h,
-                        ), // Spacer bawah agar scroll bisa lebih leluasa
+                        SizedBox(height: 40.h),
                       ],
                     ),
                   ),
@@ -228,8 +223,8 @@ class RegisterScreen extends GetWidget<RegisterController> {
   Widget _buildFooterLogin() {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.only(right: 32.h, bottom: 20.h, top: 10.h),
-      alignment: Alignment.centerRight,
+      padding: EdgeInsets.only(bottom: 40.h),
+      alignment: Alignment.center,
       child: GestureDetector(
         onTap: () {
           controller.onTapLogin();

@@ -29,6 +29,7 @@ class CustomTextFormField extends StatefulWidget {
     this.inputType = TextInputType.text,
     this.isPasswordField = false,
     this.suffixIconPath,
+    this.suffixIcon,
     this.borderColor,
     this.backgroundColor,
     this.textColor,
@@ -49,6 +50,9 @@ class CustomTextFormField extends StatefulWidget {
 
   /// Path to the suffix icon (typically for password visibility)
   final String? suffixIconPath;
+
+  // Suffix Icon
+  final IconData? suffixIcon;
 
   /// Border color of the input field
   final Color? borderColor;
@@ -149,24 +153,40 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
             borderRadius: BorderRadius.circular(8.h),
             borderSide: BorderSide(color: appTheme.red_A700, width: 1.h),
           ),
+          // ... di dalam InputDecoration ...
           suffixIcon:
-              widget.suffixIconPath != null
-                  ? GestureDetector(
-                    onTap:
-                        widget.isPasswordField
-                            ? _togglePasswordVisibility
-                            : widget.onSuffixIconTap,
-                    child: Container(
-                      padding: EdgeInsets.all(12.h),
-                      child: CustomImageView(
-                        imagePath: widget.suffixIconPath!,
-                        height: 20.h,
-                        width: 24.h,
-                        fit: BoxFit.contain,
-                      ),
+              widget.isPasswordField
+                  ? IconButton(
+                    icon: Icon(
+                      _isObscured ? Icons.visibility_off : Icons.visibility,
+                      color: widget.textColor ?? Colors.white,
                     ),
+                    onPressed: _togglePasswordVisibility,
                   )
-                  : null,
+                  : (widget.suffixIcon !=
+                          null // Cek 1: Apakah ada Icon bawaan?
+                      ? IconButton(
+                        onPressed: widget.onSuffixIconTap,
+                        icon: Icon(
+                          widget.suffixIcon,
+                          color: widget.textColor ?? Colors.white,
+                        ),
+                      )
+                      : (widget.suffixIconPath !=
+                              null // Cek 2: Apakah ada Path Gambar?
+                          ? GestureDetector(
+                            onTap: widget.onSuffixIconTap,
+                            child: Container(
+                              padding: EdgeInsets.all(12.h),
+                              child: CustomImageView(
+                                imagePath: widget.suffixIconPath!,
+                                height: 20.h,
+                                width: 24.h,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          )
+                          : null)),
         ),
       ),
     );

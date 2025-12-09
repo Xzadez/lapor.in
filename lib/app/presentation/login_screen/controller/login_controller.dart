@@ -126,12 +126,6 @@ class LoginController extends GetxController {
 
   // Handle register now tap
   void onTapRegisterNow() {
-    Get.snackbar(
-      'Info',
-      'Fitur daftar akun akan segera tersedia',
-      backgroundColor: appTheme.blueCustom,
-      colorText: appTheme.whiteCustom,
-      snackPosition: SnackPosition.TOP,
-    );
+    Get.toNamed(AppRoutes.registerScreen);
   }
 }

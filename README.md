@@ -57,8 +57,8 @@ https://raw.githubusercontent.com/Xzadez/lapor.in/master/LF/img2.png
 ---
 
 ## Backlog (Sementara)
-| Role            | Login Page              | Profile Page | Detail Laporan Page |
-|-----------------|-------------------------|--------------|-----------------------|
-| Product Owner   | Adriyan                 | Satria       | Mauludin             |
-| Scrum Master    | Ziddan                  | Rafly        | Ziddan Satria        |
-| Developer       | Mauludin, Rafly, Satria | Adriyan      | Adriyan              |
+| Role          | Login Page              | Profile Page | Detail Laporan Page | Welcome Screen           | Home Screen              | Forgot Password          | Laporan Screen | Riwayat Screen |
+| ------------- | ----------------------- | ------------ | ------------------- | ------------------------ | ------------------------ | ------------------------ | -------------- | -------------- |
+| Product Owner | Adriyan                 | Satria       | Mauludin            |                          |                          | Maulana Ziddan           |                |                |
+| Scrum Master  | Ziddan                  | Rafly        | Ziddan Satria       | Rafly                    | Rachmat Mauluddin        |                          | Rafly          |                |
+| Developer     | Mauludin, Rafly, Satria | Adriyan      | Adriyan             | Adriyan, Maulana, Ziddan | Adriyan, Maulana, Ziddan | Rachmat Mauluddin, Rafly | Adriyan        | Adriyan        |

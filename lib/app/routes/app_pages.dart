@@ -17,14 +17,13 @@ import 'package:laporin/app/presentation/laporan_screen/binding/laporan_binding.
 import 'package:laporin/app/presentation/riwayat_screen/riwayat_screen.dart';
 import 'package:laporin/app/presentation/riwayat_screen/binding/riwayat_binding.dart';
 
-
 import 'app_routes.dart';
 
 class AppPages {
   AppPages._(); // Private constructor
 
   // static const INITIAL = AppRoutes.initialRoute;
-  static const INITIAL = AppRoutes.laporanScreen;
+  static const INITIAL = AppRoutes.loginScreen;
 
   // Ubah nama dari 'pages' menjadi 'routes'
   static final routes = [
@@ -75,5 +74,3 @@ class AppPages {
     ),
   ];
 }
-
-

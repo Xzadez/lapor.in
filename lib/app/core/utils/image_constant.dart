@@ -7,7 +7,7 @@ class ImageConstant {
   static String imgPlaceholder = '${_basePath}placeholder.png';
 
   // Login Screen
-  static String imgGroup15 = '${_basePath}img_group_15.svg';
+  static String imgGroup15 = '${_basePath}visibility.svg';
   static String imgTowers = '${_basePath}logo.png';
 
   // Custom Image View Screen

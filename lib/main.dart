@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:laporin/app/core/utils/size.utils.dart';
+import 'package:laporin/app/theme/theme_helper.dart';
 
 import 'app/routes/app_pages.dart';
 
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           initialRoute: AppPages.INITIAL,
           getPages: AppPages.routes,
+          theme: theme,
         );
       },
     );

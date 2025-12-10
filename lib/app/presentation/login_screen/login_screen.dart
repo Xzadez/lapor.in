@@ -13,11 +13,12 @@ import '../../widgets/custom_text_form_field.dart';
 import './controller/login_controller.dart';
 
 class LoginScreen extends GetWidget<LoginController> {
-  LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -28,14 +29,20 @@ class LoginScreen extends GetWidget<LoginController> {
             colors: [Color(0xFFABBBD3), Color(0xFF5981B5)],
           ),
         ),
-        child: Form(
-          key: controller.formKey,
-          child: Column(
-            children: [
-              Expanded(
-                child: Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.only(top: 76.h, left: 32.h, right: 32.h),
+        child: Stack(
+          children: [
+            // --- FORM INPUT ---
+            Positioned.fill(
+              child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                padding: EdgeInsets.only(
+                  top: 76.h,
+                  left: 32.h,
+                  right: 32.h,
+                  bottom: 100.h,
+                ),
+                child: Form(
+                  key: controller.formKey,
                   child: Column(
                     children: [
                       CustomImageView(
@@ -49,6 +56,7 @@ class LoginScreen extends GetWidget<LoginController> {
                           'Selamat Datang Di Lapor.in',
                           style: TextStyleHelper.instance.title20ExtraBoldInter
                               .copyWith(height: 1.25),
+                          textAlign: TextAlign.center,
                         ),
                       ),
                       Container(
@@ -70,9 +78,7 @@ class LoginScreen extends GetWidget<LoginController> {
                         backgroundColor: appTheme.color47D9D9,
                         textColor: appTheme.white_A700,
                         margin: EdgeInsets.only(top: 52.h),
-                        validator: (value) {
-                          return controller.validateEmail(value);
-                        },
+                        validator: (value) => controller.validateEmail(value),
                       ),
                       Obx(() {
                         return controller.showEmailError.value
@@ -92,6 +98,7 @@ class LoginScreen extends GetWidget<LoginController> {
                             )
                             : SizedBox.shrink();
                       }),
+                      SizedBox(height: 12.h),
                       CustomTextFormField(
                         controller: controller.passwordController,
                         placeholder: 'Password',
@@ -102,17 +109,14 @@ class LoginScreen extends GetWidget<LoginController> {
                         backgroundColor: appTheme.color47D9D9,
                         textColor: appTheme.white_A700,
                         margin: EdgeInsets.only(top: 4.h),
-                        validator: (value) {
-                          return controller.validatePassword(value);
-                        },
+                        validator:
+                            (value) => controller.validatePassword(value),
                       ),
                       Container(
                         alignment: Alignment.centerRight,
                         margin: EdgeInsets.only(top: 10.h),
                         child: GestureDetector(
-                          onTap: () {
-                            controller.onTapForgotPassword();
-                          },
+                          onTap: () => controller.onTapForgotPassword(),
                           child: Text(
                             'Lupa password?',
                             style: TextStyleHelper.instance.label11RegularInter
@@ -137,9 +141,7 @@ class LoginScreen extends GetWidget<LoginController> {
                             onPressed:
                                 controller.isLoading.value
                                     ? null
-                                    : () {
-                                      controller.onTapLogin();
-                                    },
+                                    : () => controller.onTapLogin(),
                           );
                         }),
                       ),
@@ -147,14 +149,15 @@ class LoginScreen extends GetWidget<LoginController> {
                   ),
                 ),
               ),
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.only(right: 90.h, bottom: 12.h),
-                alignment: Alignment.centerRight,
+            ),
+
+            // --- FOOTER ---
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: EdgeInsets.only(bottom: 32.h),
                 child: GestureDetector(
-                  onTap: () {
-                    controller.onTapRegisterNow();
-                  },
+                  onTap: () => controller.onTapRegisterNow(),
                   child: RichText(
                     text: TextSpan(
                       children: [
@@ -173,8 +176,8 @@ class LoginScreen extends GetWidget<LoginController> {
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

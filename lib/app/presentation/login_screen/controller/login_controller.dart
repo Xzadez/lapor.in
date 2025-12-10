@@ -90,16 +90,16 @@ class LoginController extends GetxController {
       showEmailError.value = false;
 
       // Show success message
-      Get.snackbar(
-        'Login Berhasil',
-        'Selamat datang di Lapor.in',
-        backgroundColor: appTheme.greenCustom,
-        colorText: appTheme.whiteCustom,
-        snackPosition: SnackPosition.TOP,
+      ScaffoldMessenger.of(Get.context!).showSnackBar(
+        SnackBar(
+          content: Text('Login Berhasil: Selamat datang di Lapor.in'),
+          backgroundColor: appTheme.greenCustom,
+          behavior: SnackBarBehavior.floating,
+        ),
       );
 
-      // Navigate to home screen (when available)
-      // Get.offAllNamed(AppRoutes.homeScreen);
+      await Future.delayed(Duration(milliseconds: 500));
+      Get.offAllNamed(AppRoutes.homeScreen);
     } catch (error) {
       Get.snackbar(
         'Login Gagal',

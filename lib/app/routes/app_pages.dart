@@ -14,6 +14,8 @@ import 'package:laporin/app/presentation/detail_laporan_screen/detail_laporan_sc
 import 'package:laporin/app/presentation/detail_laporan_screen/binding/detail_laporan_binding.dart';
 import 'package:laporin/app/presentation/register_screen/bindings/register_binding.dart';
 import 'package:laporin/app/presentation/register_screen/register_screen.dart';
+import 'package:laporin/app/presentation/reset_password_screen/binding/reset_password_binding.dart';
+import 'package:laporin/app/presentation/reset_password_screen/reset_password_screen.dart';
 import 'package:laporin/app/presentation/welcome_screen/welcome_screen.dart';
 import 'package:laporin/app/presentation/welcome_screen/binding/welcome_binding.dart';
 import 'package:laporin/app/presentation/home_screen/home_screen.dart';
@@ -52,6 +54,11 @@ class AppPages {
       name: AppRoutes.otpScreen,
       page: () => const OtpScreen(),
       binding: OtpBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.resetPasswordScreen,
+      page: () => const ResetPasswordScreen(),
+      binding: ResetPasswordBinding(),
     ),
     GetPage(
       name: AppRoutes.appNavigationScreen,

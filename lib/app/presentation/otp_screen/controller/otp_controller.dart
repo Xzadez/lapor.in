@@ -85,7 +85,7 @@ class OtpController extends GetxController {
         ),
       );
       await Future.delayed(const Duration(seconds: 1));
-      Get.offAllNamed(AppRoutes.lupaPasswordScreen);
+      Get.offNamed(AppRoutes.resetPasswordScreen);
     } catch (e) {
       ScaffoldMessenger.of(Get.context!).showSnackBar(
         SnackBar(

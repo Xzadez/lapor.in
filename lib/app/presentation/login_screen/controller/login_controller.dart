@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:laporin/app/theme/theme_helper.dart';
-
 import '../../../core/app_export.dart';
 import '../model/login_model.dart';
 
 class LoginController extends GetxController {
   // Form key for validation
-  final formKey = GlobalKey<FormState>();
+  late GlobalKey<FormState> formKey;
 
   // Text controllers
   late TextEditingController emailController;
@@ -24,6 +22,7 @@ class LoginController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    formKey = GlobalKey<FormState>();
     emailController = TextEditingController();
     passwordController = TextEditingController();
     loginModel.value = LoginModel();
@@ -31,8 +30,6 @@ class LoginController extends GetxController {
 
   @override
   void onClose() {
-    emailController.dispose();
-    passwordController.dispose();
     super.onClose();
   }
 
@@ -63,12 +60,13 @@ class LoginController extends GetxController {
 
   // Handle login button tap
   void onTapLogin() async {
-    // Validate form
+    FocusManager.instance.primaryFocus?.unfocus();
+    final screenHeight = MediaQuery.of(Get.context!).size.height;
+
     if (!formKey.currentState!.validate()) {
       return;
     }
 
-    // Show email error if email is empty
     if (emailController.text.trim().isEmpty) {
       showEmailError.value = true;
       return;
@@ -77,54 +75,82 @@ class LoginController extends GetxController {
     isLoading.value = true;
 
     try {
-      // Simulate API call
       await Future.delayed(Duration(seconds: 2));
 
-      // Update model
       loginModel.value?.email?.value = emailController.text.trim();
       loginModel.value?.password?.value = passwordController.text.trim();
 
-      // Clear form
       emailController.clear();
       passwordController.clear();
       showEmailError.value = false;
 
-      // Show success message
       ScaffoldMessenger.of(Get.context!).showSnackBar(
         SnackBar(
-          content: Text('Login Berhasil: Selamat datang di Lapor.in'),
+          content: Row(
+            children: [
+              const Icon(Icons.check_circle, color: Colors.white),
+              const SizedBox(width: 12),
+              const Expanded(
+                child: Text(
+                  'Login Berhasil: Selamat datang di Lapor.in',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          ),
           backgroundColor: appTheme.greenCustom,
           behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          margin: EdgeInsets.only(
+            bottom: screenHeight - 120,
+            left: 20,
+            right: 20,
+          ),
+          duration: const Duration(seconds: 3),
         ),
       );
 
       await Future.delayed(Duration(milliseconds: 500));
       Get.offAllNamed(AppRoutes.homeScreen);
     } catch (error) {
-      Get.snackbar(
-        'Login Gagal',
-        'Email atau password salah',
-        backgroundColor: appTheme.redCustom,
-        colorText: appTheme.whiteCustom,
-        snackPosition: SnackPosition.TOP,
+      ScaffoldMessenger.of(Get.context!).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              const Icon(Icons.error_outline, color: Colors.white),
+              const SizedBox(width: 12),
+              const Expanded(
+                child: Text(
+                  'Login Gagal: Email atau password salah',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          ),
+          backgroundColor: appTheme.redCustom,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          margin: EdgeInsets.only(
+            bottom: screenHeight - 120,
+            left: 20,
+            right: 20,
+          ),
+          duration: const Duration(seconds: 3),
+        ),
       );
     } finally {
       isLoading.value = false;
     }
   }
 
-  // Handle forgot password tap
   void onTapForgotPassword() {
-    Get.snackbar(
-      'Info',
-      'Fitur lupa password akan segera tersedia',
-      backgroundColor: appTheme.blueCustom,
-      colorText: appTheme.whiteCustom,
-      snackPosition: SnackPosition.TOP,
-    );
+    Get.toNamed(AppRoutes.lupaPasswordScreen);
   }
 
-  // Handle register now tap
   void onTapRegisterNow() {
     Get.toNamed(AppRoutes.registerScreen);
   }

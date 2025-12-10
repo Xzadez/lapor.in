@@ -63,7 +63,7 @@ class LupaPasswordController extends GetxController {
       );
 
       await Future.delayed(const Duration(seconds: 2));
-      Get.offAllNamed(AppRoutes.loginScreen);
+      Get.toNamed(AppRoutes.otpScreen);
     }
   }
 }

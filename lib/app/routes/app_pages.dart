@@ -6,6 +6,8 @@ import 'package:laporin/app/presentation/login_screen/binding/login_binding.dart
 import 'package:laporin/app/presentation/login_screen/login_screen.dart';
 import 'package:laporin/app/presentation/lupa_password_screen/binding/lupa_password_binding.dart';
 import 'package:laporin/app/presentation/lupa_password_screen/lupa_password_screen.dart';
+import 'package:laporin/app/presentation/otp_screen/binding/otp_binding.dart';
+import 'package:laporin/app/presentation/otp_screen/otp_screen.dart';
 import 'package:laporin/app/presentation/profile_screen/profile_screen.dart';
 import 'package:laporin/app/presentation/profile_screen/binding/profile_binding.dart';
 import 'package:laporin/app/presentation/detail_laporan_screen/detail_laporan_screen.dart';
@@ -45,6 +47,11 @@ class AppPages {
       name: AppRoutes.lupaPasswordScreen,
       page: () => const LupaPasswordScreen(),
       binding: LupaPasswordBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.otpScreen,
+      page: () => const OtpScreen(),
+      binding: OtpBinding(),
     ),
     GetPage(
       name: AppRoutes.appNavigationScreen,

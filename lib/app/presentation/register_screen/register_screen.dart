@@ -5,7 +5,7 @@ import 'package:laporin/app/core/utils/size.utils.dart';
 import 'package:laporin/app/theme/text_style_helper.dart';
 import 'package:laporin/app/theme/theme_helper.dart';
 
-import 'package:laporin/app/presentation/register/controllers/register_controller.dart';
+import 'package:laporin/app/presentation/register_screen/controllers/register_controller.dart';
 
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_image_view.dart';

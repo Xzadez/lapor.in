@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:laporin/app/presentation/register/model/register_model.dart';
+import 'package:laporin/app/presentation/register_screen/model/register_model.dart';
 import 'package:laporin/app/theme/theme_helper.dart';
 import 'package:laporin/app/routes/app_routes.dart';
 

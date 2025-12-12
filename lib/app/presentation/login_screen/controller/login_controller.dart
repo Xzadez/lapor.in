@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:laporin/app/theme/theme_helper.dart';
+import 'package:laporin/app/widgets/custom_snackbar.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/app_export.dart';
 import '../model/login_model.dart';
 
 class LoginController extends GetxController {
-  // Form key for validation
-  late GlobalKey<FormState> formKey;
-
   // Text controllers
   late TextEditingController emailController;
   late TextEditingController passwordController;
@@ -19,10 +18,12 @@ class LoginController extends GetxController {
   // Model
   final loginModel = Rx<LoginModel?>(null);
 
+  // Supabase client
+  final supabase = Supabase.instance.client;
+
   @override
   void onInit() {
     super.onInit();
-    formKey = GlobalKey<FormState>();
     emailController = TextEditingController();
     passwordController = TextEditingController();
     loginModel.value = LoginModel();
@@ -59,7 +60,7 @@ class LoginController extends GetxController {
   }
 
   // Handle login button tap
-  void onTapLogin() async {
+  void onTapLogin(GlobalKey<FormState> formKey) async {
     FocusManager.instance.primaryFocus?.unfocus();
     final screenHeight = MediaQuery.of(Get.context!).size.height;
 
@@ -75,73 +76,36 @@ class LoginController extends GetxController {
     isLoading.value = true;
 
     try {
-      await Future.delayed(Duration(seconds: 2));
+      final AuthResponse res = await supabase.auth.signInWithPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text,
+      );
 
       loginModel.value?.email?.value = emailController.text.trim();
       loginModel.value?.password?.value = passwordController.text.trim();
 
-      emailController.clear();
-      passwordController.clear();
-      showEmailError.value = false;
+      if (res.session != null) {
+        emailController.clear();
+        passwordController.clear();
+        showEmailError.value = false;
+        CustomSnackBar.show(
+          message: 'Login Berhasil: Selamat datang di Lapor.in',
+          isError: false,
+        );
 
-      ScaffoldMessenger.of(Get.context!).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              const Icon(Icons.check_circle, color: Colors.white),
-              const SizedBox(width: 12),
-              const Expanded(
-                child: Text(
-                  'Login Berhasil: Selamat datang di Lapor.in',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-            ],
-          ),
-          backgroundColor: appTheme.greenCustom,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          margin: EdgeInsets.only(
-            bottom: screenHeight - 120,
-            left: 20,
-            right: 20,
-          ),
-          duration: const Duration(seconds: 3),
-        ),
-      );
-
-      await Future.delayed(Duration(milliseconds: 500));
-      Get.offAllNamed(AppRoutes.homeScreen);
+        Get.offAllNamed(AppRoutes.homeScreen);
+      }
+    } on AuthException catch (e) {
+      String message = e.message;
+      if (message.toLowerCase().contains('email not confirmed')) {
+        message =
+            "Email belum diverifikasi. Silahkan cek inbox/spam email Anda.";
+      } else if (message.toLowerCase().contains('invalid login credentials')) {
+        message = 'Email atau password salah.';
+      }
+      CustomSnackBar.show(message: 'Login Gagal: $message', isError: true);
     } catch (error) {
-      ScaffoldMessenger.of(Get.context!).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              const Icon(Icons.error_outline, color: Colors.white),
-              const SizedBox(width: 12),
-              const Expanded(
-                child: Text(
-                  'Login Gagal: Email atau password salah',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-            ],
-          ),
-          backgroundColor: appTheme.redCustom,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          margin: EdgeInsets.only(
-            bottom: screenHeight - 120,
-            left: 20,
-            right: 20,
-          ),
-          duration: const Duration(seconds: 3),
-        ),
-      );
+      CustomSnackBar.show(message: 'Terjadi kesalahan sistem.', isError: true);
     } finally {
       isLoading.value = false;
     }

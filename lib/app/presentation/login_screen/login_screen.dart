@@ -12,8 +12,16 @@ import '../../widgets/custom_image_view.dart';
 import '../../widgets/custom_text_form_field.dart';
 import './controller/login_controller.dart';
 
-class LoginScreen extends GetWidget<LoginController> {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final LoginController controller = Get.find<LoginController>();
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +50,7 @@ class LoginScreen extends GetWidget<LoginController> {
                   bottom: 100.h,
                 ),
                 child: Form(
-                  key: controller.formKey,
+                  key: _formKey,
                   child: Column(
                     children: [
                       CustomImageView(
@@ -141,7 +149,7 @@ class LoginScreen extends GetWidget<LoginController> {
                             onPressed:
                                 controller.isLoading.value
                                     ? null
-                                    : () => controller.onTapLogin(),
+                                    : () => controller.onTapLogin(_formKey),
                           );
                         }),
                       ),

@@ -17,6 +17,8 @@ dependencies:
   shared_preferences: ^2.2.3
   get_storage: ^2.1.1
   pin_code_fields: ^8.0.1
+  supabase_flutter: ^2.12.0
+  flutter_dotenv: ^6.0.0
 
 dev_dependencies:
   flutter_test:
@@ -27,5 +29,6 @@ flutter:
   uses-material-design: true
 
   assets:
+    - .env
     - assets/images/logo.png
     - assets/images/visibility.svg

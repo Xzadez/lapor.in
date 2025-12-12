@@ -1,15 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:laporin/app/presentation/otp_screen/model/otp_model.dart';
 import 'package:laporin/app/theme/theme_helper.dart';
+import 'package:laporin/app/widgets/custom_snackbar.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../routes/app_routes.dart';
 
 class OtpController extends GetxController {
+  final supabase = Supabase.instance.client;
   TextEditingController otpController = TextEditingController();
-
   Rx<OtpModel> otpModelObj = OtpModel().obs;
-
   final isLoading = false.obs;
+
+  String email = "";
+
+  @override
+  void onInit() {
+    super.onInit();
+    email = Get.arguments ?? '';
+    if (email.isEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Get.snackbar("Error", "Sesi habis, silakan input email ulang.");
+        Get.offAllNamed(AppRoutes.loginScreen); // Atau ke Lupa Password
+      });
+    }
+  }
 
   @override
   void onClose() {
@@ -18,36 +34,9 @@ class OtpController extends GetxController {
 
   void onVerifyOtp() async {
     String code = otpController.text;
-    final screenHeight = MediaQuery.of(Get.context!).size.height;
 
-    if (code.length < 4) {
-      ScaffoldMessenger.of(Get.context!).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              const Icon(Icons.error_outline, color: Colors.white),
-              const SizedBox(width: 12),
-              const Expanded(
-                child: Text(
-                  'Masukkan 4 digit kode OTP',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-            ],
-          ),
-          backgroundColor: appTheme.redCustom,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          margin: EdgeInsets.only(
-            bottom: screenHeight - 120,
-            left: 20,
-            right: 20,
-          ),
-          duration: const Duration(seconds: 3),
-        ),
-      );
+    if (code.length < 6) {
+      CustomSnackBar.show(message: 'Masukkan 6 digit kode OTP', isError: true);
       return;
     }
 
@@ -55,63 +44,27 @@ class OtpController extends GetxController {
     FocusManager.instance.primaryFocus?.unfocus();
 
     try {
-      await Future.delayed(Duration(seconds: 2));
-
-      ScaffoldMessenger.of(Get.context!).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              const Icon(Icons.check_circle, color: Colors.white),
-              const SizedBox(width: 12),
-              const Expanded(
-                child: Text(
-                  'Verifikasi Berhasil',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-            ],
-          ),
-          backgroundColor: appTheme.greenCustom,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          margin: EdgeInsets.only(
-            bottom: screenHeight - 120,
-            left: 20,
-            right: 20,
-          ),
-          duration: const Duration(seconds: 3),
-        ),
+      final AuthResponse res = await supabase.auth.verifyOTP(
+        type: OtpType.recovery,
+        token: code,
+        email: email,
       );
-      await Future.delayed(const Duration(seconds: 1));
-      Get.offNamed(AppRoutes.resetPasswordScreen);
+
+      if (res.session != null) {
+        CustomSnackBar.show(message: 'Verifikasi Berhasil', isError: false);
+
+        Get.offNamed(AppRoutes.resetPasswordScreen);
+      }
+    } on AuthException catch (e) {
+      CustomSnackBar.show(
+        message: 'Gagal Verifikasi, Kode OTP Salah atau Kadaluarsa.',
+        isError: true,
+      );
+      print("Error asli $e");
     } catch (e) {
-      ScaffoldMessenger.of(Get.context!).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              const Icon(Icons.error_outline, color: Colors.white),
-              const SizedBox(width: 12),
-              const Expanded(
-                child: Text(
-                  'Kode OTP Salah, silahkan coba lagi',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-            ],
-          ),
-          backgroundColor: appTheme.redCustom,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          margin: EdgeInsets.only(
-            bottom: screenHeight - 140,
-            left: 20,
-            right: 20,
-          ),
-        ),
+      CustomSnackBar.show(
+        message: 'ErrorL: Terjadi kesalahan sistem.',
+        isError: true,
       );
     } finally {
       isLoading.value = false;

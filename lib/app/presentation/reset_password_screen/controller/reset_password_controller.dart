@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:laporin/app/presentation/reset_password_screen/model/reset_password_model.dart';
 import 'package:laporin/app/theme/theme_helper.dart';
+import 'package:laporin/app/widgets/custom_snackbar.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../routes/app_routes.dart';
 
 class ResetPasswordController extends GetxController {
+  final supabase = Supabase.instance.client;
   // Form Key untuk validasi
   late GlobalKey<FormState> formKey;
 
@@ -67,61 +70,31 @@ class ResetPasswordController extends GetxController {
 
     try {
       // Simulasi API Call
-      await Future.delayed(const Duration(seconds: 2));
+      final UserResponse res = await supabase.auth.updateUser(
+        UserAttributes(
+          password: passwordController.text, // Password baru dikirim ke sini
+        ),
+      );
+      if (res.user != null) {
+        resetPasswordModelObj.update((val) {
+          val?.newPassword.value = passwordController.text;
+          val?.confirmPassword.value = confirmPasswordController.text;
+        });
 
-      resetPasswordModelObj.update((val) {
-        val?.newPassword.value = passwordController.text;
-        val?.confirmPassword.value = confirmPasswordController.text;
-      });
+        await supabase.auth.signOut();
+      }
 
       // --- SUKSES ---
-      ScaffoldMessenger.of(Get.context!).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              const Icon(Icons.check_circle, color: Colors.white),
-              const SizedBox(width: 12),
-              const Expanded(
-                child: Text(
-                  'Password berhasil diubah, silahkan login',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-            ],
-          ),
-          backgroundColor: appTheme.greenCustom,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          margin: EdgeInsets.only(
-            bottom: screenHeight - 120,
-            left: 20,
-            right: 20,
-          ),
-          duration: const Duration(seconds: 3),
-        ),
+      CustomSnackBar.show(
+        message: 'Sukses! Silahkan login dengan password baru.',
+        isError: false,
       );
-
-      // Delay sedikit
       await Future.delayed(const Duration(seconds: 2));
-
-      // --- NAVIGASI AKHIR ---
       Get.offAllNamed(AppRoutes.loginScreen);
+    } on AuthException catch (e) {
+      CustomSnackBar.show(message: 'Gagal: ${e.message}', isError: true);
     } catch (e) {
-      // --- ERROR ---
-      ScaffoldMessenger.of(Get.context!).showSnackBar(
-        SnackBar(
-          content: Text('Gagal mengubah password'),
-          backgroundColor: appTheme.redCustom,
-          behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.only(
-            bottom: screenHeight - 120,
-            left: 20,
-            right: 20,
-          ),
-        ),
-      );
+      CustomSnackBar.show(message: 'Terjadi kesalahn sistem.', isError: true);
     } finally {
       isLoading.value = false;
     }

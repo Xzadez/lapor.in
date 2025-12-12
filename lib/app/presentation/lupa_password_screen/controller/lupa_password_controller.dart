@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:laporin/app/theme/theme_helper.dart';
+import 'package:laporin/app/widgets/custom_snackbar.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../routes/app_routes.dart';
 
 class LupaPasswordController extends GetxController {
+  final supabase = Supabase.instance.client;
   late TextEditingController emailController;
   late GlobalKey<FormState> formKey;
+  final isLoading = false.obs;
 
   @override
   void onInit() {
@@ -16,6 +20,7 @@ class LupaPasswordController extends GetxController {
 
   @override
   void onClose() {
+    emailController.dispose();
     super.onClose();
   }
 
@@ -32,38 +37,33 @@ class LupaPasswordController extends GetxController {
   void onSendOtp() async {
     if (formKey.currentState!.validate()) {
       FocusManager.instance.primaryFocus?.unfocus();
+      isLoading.value = true;
 
-      final screenHeight = MediaQuery.of(Get.context!).size.height;
-      ScaffoldMessenger.of(Get.context!).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              const Icon(Icons.check_circle, color: Colors.white),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  'Sukses: Kode OTP dikirim ke ${emailController.text}',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-            ],
-          ),
-          backgroundColor: appTheme.greenCustom,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          margin: EdgeInsets.only(
-            bottom: screenHeight - 120,
-            left: 20,
-            right: 20,
-          ),
-          duration: const Duration(seconds: 3),
-        ),
-      );
+      try {
+        await supabase.auth.resetPasswordForEmail(emailController.text.trim());
+        CustomSnackBar.show(
+          message: "Kode OTP dikirim ke ${emailController.text}",
+          isError: false,
+        );
 
-      await Future.delayed(const Duration(seconds: 2));
-      Get.toNamed(AppRoutes.otpScreen);
+        Get.toNamed(
+          AppRoutes.otpScreen,
+          arguments: emailController.text.trim(),
+        );
+      } on AuthException catch (e) {
+        CustomSnackBar.show(
+          message:
+              'Gagal: Email tidak ditemukan atau terjadi keselahan: ${e.message}',
+          isError: true,
+        );
+      } catch (e) {
+        CustomSnackBar.show(
+          message: 'Error: Terjadi keselahan sistem',
+          isError: true,
+        );
+      } finally {
+        isLoading.value = false;
+      }
     }
   }
 }

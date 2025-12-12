@@ -31,7 +31,7 @@ class OtpScreen extends GetWidget<OtpController> {
             padding: EdgeInsets.symmetric(horizontal: 32.h, vertical: 40.h),
             child: Column(
               children: [
-                SizedBox(height: 100.h),
+                SizedBox(height: 80.h),
                 // --- JUDUL ---
                 Text(
                   'Lupa password?\nTenang aja akun anda aman kok',
@@ -44,21 +44,29 @@ class OtpScreen extends GetWidget<OtpController> {
                       ),
                 ),
 
-                SizedBox(height: 100.h),
+                SizedBox(height: 16.h),
                 // --- SUB JUDUL ---
                 Text(
-                  'Silahkan masukkan kode',
+                  'Masukkan 6 digit kode yang dikirim ke:',
                   style: TextStyleHelper.instance.label11RegularInter.copyWith(
                     color: Colors.white,
                     fontSize: 11.fSize,
                   ),
                 ),
+                SizedBox(height: 8.h),
+                Text(
+                  controller.email,
+                  style: TextStyleHelper.instance.body14BoldInter.copyWith(
+                    color: Colors.white,
+                    fontSize: 14.fSize,
+                  ),
+                ),
 
-                SizedBox(height: 16.h),
+                SizedBox(height: 40.h),
 
-                // --- INPUT OTP (WIDGET BARU) ---
+                // --- INPUT OTP ---
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.h),
+                  padding: EdgeInsets.symmetric(horizontal: 10.h),
                   child: CustomPinCodeTextField(
                     context: context,
                     controller: controller.otpController,

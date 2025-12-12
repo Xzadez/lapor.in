@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:laporin/app/presentation/register_screen/model/register_model.dart';
 import 'package:laporin/app/theme/theme_helper.dart';
 import 'package:laporin/app/routes/app_routes.dart';
+import 'package:laporin/app/widgets/custom_snackbar.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class RegisterController extends GetxController {
-  // Form key
-  final formKey = GlobalKey<FormState>();
+  //Instance Supabase Client
+  final supabase = Supabase.instance.client;
 
   // Text Controllers
   late TextEditingController firstNameController;
@@ -114,34 +117,50 @@ class RegisterController extends GetxController {
 
   // --- Actions ---
 
-  void onTapRegister() async {
+  void onTapRegister(GlobalKey<FormState> formKey) async {
     if (!formKey.currentState!.validate()) {
       return;
+    }
+    if (registerModel.value.birthDay.value == null) {
+      CustomSnackBar.show(
+        message: "Error: Silahkan pilih tanggal lahir.",
+        isError: true,
+      );
     }
 
     isLoading.value = true;
     try {
       // Simulate API Call
-      await Future.delayed(Duration(seconds: 2));
-
-      Get.snackbar(
-        'Berhasil',
-        'Akun berhasil dibuat. Silahkan login.',
-        backgroundColor: appTheme.greenCustom,
-        colorText: appTheme.whiteCustom,
-        snackPosition: SnackPosition.TOP,
+      final AuthResponse res = await supabase.auth.signUp(
+        email: emailController.text.trim(),
+        password: passwordController.text,
+        data: {
+          'first_name': firstNameController.text.trim(),
+          'last_name': lastNameController.text.trim(),
+          'username': usernameController.text.trim(),
+          'birth_day': registerModel.value.birthDay.value!.toIso8601String(),
+          'role': null,
+        },
       );
 
-      // Navigate ke Login atau Home
-      Get.offNamed(AppRoutes.loginScreen);
+      if (res.user != null) {
+        CustomSnackBar.show(
+          message: "Registrasi berhasil! Silahkan cek email untuk verifikasi.",
+          isError: false,
+        );
+        Get.offNamed(AppRoutes.loginScreen);
+      }
+    } on AuthException catch (e) {
+      CustomSnackBar.show(
+        message: "Gagal Register : ${e.message}.",
+        isError: true,
+      );
     } catch (e) {
-      Get.snackbar(
-        'Gagal',
-        'Terjadi kesalahan saat mendaftar.',
-        backgroundColor: appTheme.redCustom,
-        colorText: appTheme.whiteCustom,
-        snackPosition: SnackPosition.TOP,
-      );
+      String errorMessage = "Terjadi kesalahan saat mendaftar";
+      if (e.toString().contains('username')) {
+        errorMessage = 'Username sudah digunakan.';
+      }
+      CustomSnackBar.show(message: "Error : $errorMessage}.", isError: true);
     } finally {
       isLoading.value = false;
     }

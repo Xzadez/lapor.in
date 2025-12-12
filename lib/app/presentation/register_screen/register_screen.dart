@@ -11,8 +11,16 @@ import '../../widgets/custom_button.dart';
 import '../../widgets/custom_image_view.dart';
 import '../../widgets/custom_text_form_field.dart';
 
-class RegisterScreen extends GetWidget<RegisterController> {
+class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
+
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final RegisterController controller = Get.find<RegisterController>();
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +38,7 @@ class RegisterScreen extends GetWidget<RegisterController> {
           ),
         ),
         child: Form(
-          key: controller.formKey,
+          key: _formKey,
           child: Column(
             children: [
               Expanded(
@@ -176,7 +184,7 @@ class RegisterScreen extends GetWidget<RegisterController> {
                             onPressed:
                                 controller.isLoading.value
                                     ? null
-                                    : () => controller.onTapRegister(),
+                                    : () => controller.onTapRegister(_formKey),
                           );
                         }),
                         SizedBox(height: 40.h),

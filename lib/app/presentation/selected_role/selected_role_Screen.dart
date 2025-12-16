@@ -45,7 +45,7 @@ class SelectedRoleView extends GetView<SelectedRoleController> {
               description: "Bergabung untuk menjadi warga baru",
               buttonText: "GABUNG SEKARANG",
               primaryColor: primaryColor,
-              onTap: controller.onJoinInstance,
+              onTap: controller.onJoinMember,
               isPlaceholder: true, // Ubah false jika sudah ada gambar aset
             ),
 
@@ -58,7 +58,7 @@ class SelectedRoleView extends GetView<SelectedRoleController> {
                   "Baru install aplikasi? Yuk buat Komunitas RT/RW baru!!.",
               buttonText: "BUAT KOMUNITAS SEKARANG",
               primaryColor: primaryColor,
-              onTap: controller.onCreateInstance,
+              onTap: controller.onCreateCommunity,
               isPlaceholder: true,
             ),
           ],

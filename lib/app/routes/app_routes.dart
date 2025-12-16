@@ -9,6 +9,7 @@ abstract class AppRoutes {
   static const loginScreen = '/login_screen';
   static const registerScreen = '/register_screen';
   static const selectedRoleScreen = '/selected_role_screen';
+  static const jointMember = '/join_member_screen';
   static const lupaPasswordScreen = '/lupa_password_screen';
   static const otpScreen = '/otp_screen';
   static const resetPasswordScreen = '/reset_password_screen';

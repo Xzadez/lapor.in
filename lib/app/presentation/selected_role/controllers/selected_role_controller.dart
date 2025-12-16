@@ -3,29 +3,26 @@ import 'package:laporin/app/routes/app_routes.dart';
 
 class SelectedRoleController extends GetxController {
   // 1. Logic Tombol GABUNG (User ingin jadi Warga di RT/RW yang sudah ada)
-  void onJoinInstance() {
+  void onJoinMember() {
     // Idealnya: Pindah ke halaman input Kode Undangan / Scan QR
     // Contoh: Get.toNamed(AppRoutes.joinInstanceScreen);
 
     print("User memilih: Gabung Instansi");
-    Get.snackbar(
-      "Info",
-      "Fitur Gabung Instansi akan segera hadir (Navigasi ke Form Input Kode)",
-    );
+    Get.toNamed(AppRoutes.jointMember);
 
     // SEMENTARA: Kita bisa arahkan ke Home dulu untuk testing
     // Get.offAllNamed(AppRoutes.mainScreen);
   }
 
   // 2. Logic Tombol BUAT (User ingin jadi Ketua RT/RW baru)
-  void onCreateInstance() {
+  void onCreateCommunity() {
     // Idealnya: Pindah ke halaman Form Pendaftaran Instansi Baru
     // Contoh: Get.toNamed(AppRoutes.createInstanceScreen);
 
-    print("User memilih: Buat Instansi Baru");
+    print("User memilih: Buat Komunitas Baru");
     Get.snackbar(
       "Info",
-      "Fitur Buat Instansi akan segera hadir (Navigasi ke Form Registrasi RT/RW)",
+      "Fitur Buat Komunitas akan segera hadir (Navigasi ke Form Registrasi RT/RW)",
     );
   }
 

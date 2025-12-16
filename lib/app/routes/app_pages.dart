@@ -2,6 +2,8 @@
 import 'package:get/get.dart';
 import 'package:laporin/app/presentation/app_navigation_screen/app_navigation_screen.dart';
 import 'package:laporin/app/presentation/app_navigation_screen/binding/app_navigation_binding.dart';
+import 'package:laporin/app/presentation/join_member_screen/binding/join_member_binding.dart';
+import 'package:laporin/app/presentation/join_member_screen/join_member_screen.dart';
 import 'package:laporin/app/presentation/login_screen/binding/login_binding.dart';
 import 'package:laporin/app/presentation/login_screen/login_screen.dart';
 import 'package:laporin/app/presentation/lupa_password_screen/binding/lupa_password_binding.dart';
@@ -69,6 +71,11 @@ class AppPages {
       name: AppRoutes.selectedRoleScreen,
       page: () => SelectedRoleView(),
       bindings: [SelectedRoleBinding()],
+    ),
+    GetPage(
+      name: AppRoutes.jointMember, // Sesuaikan dengan AppRoutes
+      page: () => const JoinMemberScreen(),
+      binding: JoinMemberBinding(),
     ),
     GetPage(
       name: AppRoutes.lupaPasswordScreen,

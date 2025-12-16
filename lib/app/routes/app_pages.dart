@@ -18,6 +18,9 @@ import 'package:laporin/app/presentation/register_screen/bindings/register_bindi
 import 'package:laporin/app/presentation/register_screen/register_screen.dart';
 import 'package:laporin/app/presentation/reset_password_screen/binding/reset_password_binding.dart';
 import 'package:laporin/app/presentation/reset_password_screen/reset_password_screen.dart';
+import 'package:laporin/app/presentation/selected_role/bindings/selected_role_binding.dart';
+import 'package:laporin/app/presentation/selected_role/selected_role_Screen.dart';
+import 'package:laporin/app/presentation/splash_screen/splash_screen.dart';
 import 'package:laporin/app/presentation/welcome_screen/welcome_screen.dart';
 import 'package:laporin/app/presentation/welcome_screen/binding/welcome_binding.dart';
 import 'package:laporin/app/presentation/home_screen/home_screen.dart';
@@ -37,10 +40,16 @@ class AppPages {
   AppPages._(); // Private constructor
 
   // static const INITIAL = AppRoutes.initialRoute;
-  static const INITIAL = AppRoutes.loginScreen;
+  static const INITIAL = AppRoutes.SPLASH_SCREEN;
 
   // Ubah nama dari 'pages' menjadi 'routes'
   static final routes = [
+    GetPage(
+      name:
+          AppRoutes
+              .SPLASH_SCREEN, // Pastikan string '/splash_screen' ada di AppRoutes
+      page: () => const SplashScreen(),
+    ),
     GetPage(
       name: AppRoutes.mainScreen,
       page: () => const MainScreen(),
@@ -55,6 +64,11 @@ class AppPages {
       name: AppRoutes.registerScreen,
       page: () => RegisterScreen(),
       bindings: [RegisterBinding()],
+    ),
+    GetPage(
+      name: AppRoutes.selectedRoleScreen,
+      page: () => SelectedRoleView(),
+      bindings: [SelectedRoleBinding()],
     ),
     GetPage(
       name: AppRoutes.lupaPasswordScreen,

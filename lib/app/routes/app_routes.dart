@@ -4,9 +4,11 @@ abstract class AppRoutes {
   AppRoutes._();
 
   static const initialRoute = '/';
+  static const SPLASH_SCREEN = '/splash_screen';
   static const mainScreen = '/main_screen';
   static const loginScreen = '/login_screen';
   static const registerScreen = '/register_screen';
+  static const selectedRoleScreen = '/selected_role_screen';
   static const lupaPasswordScreen = '/lupa_password_screen';
   static const otpScreen = '/otp_screen';
   static const resetPasswordScreen = '/reset_password_screen';

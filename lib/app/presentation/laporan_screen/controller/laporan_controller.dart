@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import '../view/laporan_model.dart';
+import 'package:laporin/app/presentation/laporan_screen/model/laporan_model.dart';
 
 class LaporanController extends GetxController {
   RxList<LaporanModel> laporanList = <LaporanModel>[].obs;

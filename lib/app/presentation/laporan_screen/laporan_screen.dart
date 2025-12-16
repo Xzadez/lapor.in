@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:laporin/app/presentation/laporan_screen/model/laporan_model.dart';
 import '../../routes/app_routes.dart';
 import '../laporan_screen/controller/laporan_controller.dart';
-import '../laporan_screen/view/laporan_model.dart';
 
 class LaporanScreen extends StatelessWidget {
   const LaporanScreen({super.key});
@@ -26,12 +26,15 @@ class LaporanScreen extends StatelessWidget {
 
                   Obx(() {
                     return Column(
-                      children: controller.laporanList
-                          .map((laporan) => Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
-                        child: _buildLaporanCard(laporan),
-                      ))
-                          .toList(),
+                      children:
+                          controller.laporanList
+                              .map(
+                                (laporan) => Padding(
+                                  padding: const EdgeInsets.only(bottom: 16),
+                                  child: _buildLaporanCard(laporan),
+                                ),
+                              )
+                              .toList(),
                     );
                   }),
 
@@ -40,12 +43,7 @@ class LaporanScreen extends StatelessWidget {
               ),
             ),
 
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: _buildBottomNav(),
-            ),
+            Positioned(left: 0, right: 0, bottom: 0, child: _buildBottomNav()),
           ],
         ),
       ),
@@ -65,10 +63,7 @@ class LaporanScreen extends StatelessWidget {
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const Spacer(),
-          IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: () {},
-          ),
+          IconButton(icon: const Icon(Icons.menu), onPressed: () {}),
         ],
       ),
     );
@@ -103,15 +98,15 @@ class LaporanScreen extends StatelessWidget {
                 const Text(
                   "Ditolak",
                   style: TextStyle(
-                      color: Colors.red,
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold),
+                    color: Colors.red,
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                  ),
                 )
               else if (data.estimasi != null)
                 Text(
                   data.estimasi!,
-                  style: const TextStyle(
-                      fontSize: 10, color: Colors.black54),
+                  style: const TextStyle(fontSize: 10, color: Colors.black54),
                 ),
               const SizedBox(width: 6),
               const Icon(Icons.more_horiz, size: 18),
@@ -166,7 +161,7 @@ class LaporanScreen extends StatelessWidget {
                 child: const Text("Batalkan"),
               ),
             ),
-          ]
+          ],
         ],
       ),
     );
@@ -234,22 +229,14 @@ class LaporanScreen extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _navItem(
-            icon: Icons.home,
-            label: "Beranda",
-            onTap: () => Get.back(),
-          ),
+          _navItem(icon: Icons.home, label: "Beranda", onTap: () => Get.back()),
           _navItem(
             icon: Icons.assignment_outlined,
             label: "Laporan",
             isActive: true,
             onTap: () {},
           ),
-          _navItem(
-            icon: Icons.history,
-            label: "Riwayat",
-            onTap: () {},
-          ),
+          _navItem(icon: Icons.history, label: "Riwayat", onTap: () {}),
           _navItem(
             icon: Icons.person,
             label: "Profile",
@@ -285,8 +272,10 @@ class LaporanScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 4),
-          Text(label,
-              style: const TextStyle(fontSize: 12, color: Colors.white)),
+          Text(
+            label,
+            style: const TextStyle(fontSize: 12, color: Colors.white),
+          ),
         ],
       ),
     );

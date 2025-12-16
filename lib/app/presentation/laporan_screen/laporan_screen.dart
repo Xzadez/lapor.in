@@ -14,37 +14,34 @@ class LaporanScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Stack(
-          children: [
-            SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildHeader(),
-                  const SizedBox(height: 16),
-
-                  Obx(() {
-                    return Column(
-                      children:
-                          controller.laporanList
-                              .map(
-                                (laporan) => Padding(
-                                  padding: const EdgeInsets.only(bottom: 16),
-                                  child: _buildLaporanCard(laporan),
-                                ),
-                              )
-                              .toList(),
-                    );
-                  }),
-
-                  const SizedBox(height: 120),
-                ],
-              ),
-            ),
-
-            Positioned(left: 0, right: 0, bottom: 0, child: _buildBottomNav()),
-          ],
+        // Langsung SingleChildScrollView, HAPUS Stack
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(
+            16,
+            12,
+            16,
+            100,
+          ), // Beri padding bawah agar list tidak tertutup navbar MainScreen
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeader(),
+              const SizedBox(height: 16),
+              Obx(() {
+                return Column(
+                  children:
+                      controller.laporanList
+                          .map(
+                            (laporan) => Padding(
+                              padding: const EdgeInsets.only(bottom: 16),
+                              child: _buildLaporanCard(laporan),
+                            ),
+                          )
+                          .toList(),
+                );
+              }),
+            ],
+          ),
         ),
       ),
     );
@@ -211,73 +208,6 @@ class LaporanScreen extends StatelessWidget {
           ],
         );
       }),
-    );
-  }
-
-  // ================= NAVBAR (KONSISTEN) =================
-  Widget _buildBottomNav() {
-    return Container(
-      height: 72,
-      decoration: const BoxDecoration(
-        color: Color(0xFF1E88E5),
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
-        ),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _navItem(icon: Icons.home, label: "Beranda", onTap: () => Get.back()),
-          _navItem(
-            icon: Icons.assignment_outlined,
-            label: "Laporan",
-            isActive: true,
-            onTap: () {},
-          ),
-          _navItem(icon: Icons.history, label: "Riwayat", onTap: () {}),
-          _navItem(
-            icon: Icons.person,
-            label: "Profile",
-            onTap: () => Get.toNamed(AppRoutes.profileScreen),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _navItem({
-    required IconData icon,
-    required String label,
-    bool isActive = false,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            height: 40,
-            width: 40,
-            decoration: BoxDecoration(
-              color: isActive ? Colors.white : Colors.transparent,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              icon,
-              size: 22,
-              color: isActive ? const Color(0xFF1E88E5) : Colors.white,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: const TextStyle(fontSize: 12, color: Colors.white),
-          ),
-        ],
-      ),
     );
   }
 }

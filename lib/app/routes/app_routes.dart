@@ -4,6 +4,7 @@ abstract class AppRoutes {
   AppRoutes._();
 
   static const initialRoute = '/';
+  static const mainScreen = '/main_screen';
   static const loginScreen = '/login_screen';
   static const registerScreen = '/register_screen';
   static const lupaPasswordScreen = '/lupa_password_screen';

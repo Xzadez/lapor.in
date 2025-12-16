@@ -6,6 +6,8 @@ import 'package:laporin/app/presentation/login_screen/binding/login_binding.dart
 import 'package:laporin/app/presentation/login_screen/login_screen.dart';
 import 'package:laporin/app/presentation/lupa_password_screen/binding/lupa_password_binding.dart';
 import 'package:laporin/app/presentation/lupa_password_screen/lupa_password_screen.dart';
+import 'package:laporin/app/presentation/main_screen/binding/main_binding.dart';
+import 'package:laporin/app/presentation/main_screen/main_screen.dart';
 import 'package:laporin/app/presentation/otp_screen/binding/otp_binding.dart';
 import 'package:laporin/app/presentation/otp_screen/otp_screen.dart';
 import 'package:laporin/app/presentation/profile_screen/profile_screen.dart';
@@ -39,6 +41,11 @@ class AppPages {
 
   // Ubah nama dari 'pages' menjadi 'routes'
   static final routes = [
+    GetPage(
+      name: AppRoutes.mainScreen,
+      page: () => const MainScreen(),
+      binding: MainBinding(),
+    ),
     GetPage(
       name: AppRoutes.loginScreen,
       page: () => LoginScreen(),

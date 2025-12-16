@@ -22,7 +22,7 @@ void main() async {
   final session = Supabase.instance.client.auth.currentSession;
 
   final String initialRoute =
-      session != null ? AppRoutes.homeScreen : AppPages.INITIAL;
+      session != null ? AppRoutes.mainScreen : AppPages.INITIAL;
 
   runApp(MyApp(initialRoute: initialRoute));
 }

@@ -13,43 +13,34 @@ class RiwayatScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Stack(
-          children: [
-            SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildHeader(),
-                  const SizedBox(height: 12),
-
-                  const Text(
-                    "Laporan anda",
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 8),
-
-                  Obx(() {
-                    return Column(
-                      children: controller.riwayatList.map((item) {
+        // Hapus Stack, langsung Scroll View
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(
+            16,
+            12,
+            16,
+            100,
+          ), // Tambah padding bawah
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeader(),
+              const SizedBox(height: 12),
+              const Text(
+                "Laporan anda",
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              Obx(() {
+                return Column(
+                  children:
+                      controller.riwayatList.map((item) {
                         return _buildRiwayatCard(item);
                       }).toList(),
-                    );
-                  }),
-
-                  const SizedBox(height: 550), // supaya tidak ketutup navbar
-                ],
-              ),
-            ),
-
-            // ================= BOTTOM NAV =================
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: _buildBottomNav(),
-            )
-          ],
+                );
+              }),
+            ],
+          ),
         ),
       ),
     );
@@ -68,10 +59,7 @@ class RiwayatScreen extends StatelessWidget {
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const Spacer(),
-          IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: () {},
-          )
+          IconButton(icon: const Icon(Icons.menu), onPressed: () {}),
         ],
       ),
     );
@@ -101,13 +89,19 @@ class RiwayatScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(item.tanggal,
-                    style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                Text(
+                  item.tanggal,
+                  style: const TextStyle(fontSize: 11, color: Colors.grey),
+                ),
                 const SizedBox(height: 4),
 
-                Text(item.judul,
-                    style: const TextStyle(
-                        fontSize: 15, fontWeight: FontWeight.bold)),
+                Text(
+                  item.judul,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 const SizedBox(height: 8),
 
                 Row(
@@ -142,8 +136,10 @@ class RiwayatScreen extends StatelessWidget {
                   right: 6,
                   top: 4,
                   child: Container(
-                    padding:
-                    const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 2,
+                    ),
                     decoration: BoxDecoration(
                       color: _statusColor(item.status).withOpacity(0.15),
                       borderRadius: BorderRadius.circular(12),
@@ -194,64 +190,6 @@ class RiwayatScreen extends StatelessWidget {
           fontSize: 11,
           fontWeight: FontWeight.bold,
         ),
-      ),
-    );
-  }
-
-  // ========================= NAVBAR =========================
-  Widget _buildBottomNav() {
-    return Container(
-      height: 72,
-      decoration: const BoxDecoration(
-        color: Color(0xFF1E88E5),
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
-        ),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _nav(Icons.home, "Beranda",
-                  () => Get.toNamed(AppRoutes.homeScreen)),
-          _nav(Icons.assignment_outlined, "Laporan",
-                  () => Get.toNamed(AppRoutes.laporanScreen)),
-          _nav(Icons.history, "Riwayat", () {},
-              active: true),
-          _nav(Icons.person, "Profile",
-                  () => Get.toNamed(AppRoutes.profileScreen)),
-        ],
-      ),
-    );
-  }
-
-  Widget _nav(IconData icon, String label, VoidCallback onTap,
-      {bool active = false}) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            height: 40,
-            width: 40,
-            decoration: BoxDecoration(
-              color: active ? Colors.white : Colors.transparent,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              icon,
-              size: 22,
-              color: active ? const Color(0xFF1E88E5) : Colors.white,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: const TextStyle(fontSize: 12, color: Colors.white),
-          )
-        ],
       ),
     );
   }

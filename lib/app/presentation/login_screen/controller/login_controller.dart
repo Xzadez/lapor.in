@@ -93,7 +93,7 @@ class LoginController extends GetxController {
           isError: false,
         );
 
-        Get.offAllNamed(AppRoutes.homeScreen);
+        Get.offAllNamed(AppRoutes.mainScreen);
       }
     } on AuthException catch (e) {
       String message = e.message;

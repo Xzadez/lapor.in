@@ -18,7 +18,7 @@ class HomeScreen extends StatelessWidget {
           // ===================== SCROLL CONTENT (SAFE AREA) =====================
           SafeArea(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 100),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -29,10 +29,7 @@ class HomeScreen extends StatelessWidget {
                   const Center(
                     child: Text(
                       "Silahkan klik ikon '+' untuk tambah laporan",
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Colors.black87,
-                      ),
+                      style: TextStyle(fontSize: 13, color: Colors.black87),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -42,16 +39,11 @@ class HomeScreen extends StatelessWidget {
 
                   const Text(
                     "Berita Terkini",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
 
                   const SizedBox(height: 12),
                   _buildBeritaTerkiniCard(),
-
-                  const SizedBox(height: 140), // ruang di atas navbar
                 ],
               ),
             ),
@@ -59,23 +51,21 @@ class HomeScreen extends StatelessWidget {
 
           // ===================== FLOATING BUBBLE =====================
           Positioned(
-            bottom: 95,
+            bottom: 20,
             right: 16,
             child: Column(
               children: [
-                _roundIconButton(Icons.mic, tooltip: 'Aktifkan perintah suara?'),
+                _roundIconButton(
+                  Icons.mic,
+                  tooltip: 'Aktifkan perintah suara?',
+                ),
                 const SizedBox(height: 12),
-                _roundIconButton(Icons.text_increase, tooltip: 'Ganti ukuran huruf?'),
+                _roundIconButton(
+                  Icons.text_increase,
+                  tooltip: 'Ganti ukuran huruf?',
+                ),
               ],
             ),
-          ),
-
-          // ===================== BOTTOM NAVIGATION =====================
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0, // langsung tempel bawah layar
-            child: _buildBottomNav(),
           ),
         ],
       ),
@@ -88,24 +78,14 @@ class HomeScreen extends StatelessWidget {
       height: 48,
       child: Row(
         children: [
-          Image.asset(
-            'assets/images/logo.png',
-            height: 32,
-            width: 32,
-          ),
+          Image.asset('assets/images/logo.png', height: 32, width: 32),
           const Spacer(),
           const Text(
             'Beranda',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const Spacer(),
-          IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: () {},
-          ),
+          IconButton(icon: const Icon(Icons.menu), onPressed: () {}),
         ],
       ),
     );
@@ -142,14 +122,15 @@ class HomeScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: List.generate(
               controller.sliderImages.length,
-                  (index) => Container(
+              (index) => Container(
                 margin: const EdgeInsets.symmetric(horizontal: 3),
                 width: controller.currentPage.value == index ? 8 : 6,
                 height: controller.currentPage.value == index ? 8 : 6,
                 decoration: BoxDecoration(
-                  color: controller.currentPage.value == index
-                      ? Colors.black87
-                      : Colors.black26,
+                  color:
+                      controller.currentPage.value == index
+                          ? Colors.black87
+                          : Colors.black26,
                   shape: BoxShape.circle,
                 ),
               ),
@@ -179,10 +160,7 @@ class HomeScreen extends StatelessWidget {
               children: const [
                 Icon(Icons.add, size: 32, color: Colors.black54),
                 SizedBox(height: 8),
-                Text(
-                  "Tambah Laporan",
-                  style: TextStyle(fontSize: 14),
-                ),
+                Text("Tambah Laporan", style: TextStyle(fontSize: 14)),
               ],
             ),
           ),
@@ -211,19 +189,13 @@ class HomeScreen extends StatelessWidget {
         children: [
           const Text(
             "20 Oktober 2025",
-            style: TextStyle(
-              fontSize: 11,
-              color: Colors.grey,
-            ),
+            style: TextStyle(fontSize: 11, color: Colors.grey),
           ),
           const SizedBox(height: 4),
 
           const Text(
             "Judul Laporan",
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
           ),
 
           const SizedBox(height: 8),
@@ -261,8 +233,11 @@ class HomeScreen extends StatelessWidget {
   }
 
   // ========================= FLOATING BUBBLE =========================
-  static Widget _roundIconButton(IconData icon,
-      {double size = 40, String? tooltip}) {
+  static Widget _roundIconButton(
+    IconData icon, {
+    double size = 40,
+    String? tooltip,
+  }) {
     final button = Container(
       height: size,
       width: size,
@@ -273,87 +248,7 @@ class HomeScreen extends StatelessWidget {
       child: Icon(icon, size: size * 0.55, color: Color(0xFF1E88E5)),
     );
 
-    return tooltip != null
-        ? Tooltip(message: tooltip, child: button)
-        : button;
-  }
-
-  // ========================= BOTTOM NAV =========================
-  Widget _buildBottomNav() {
-    return Container(
-      height: 72,
-      decoration: const BoxDecoration(
-        color: Color(0xFF1E88E5),
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
-        ),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _buildNavItem(
-            icon: Icons.home,
-            label: 'Beranda',
-            isActive: true,
-            onTap: () {},
-          ),
-          _buildNavItem(
-            icon: Icons.assignment_outlined,
-            label: 'Laporan',
-            onTap: () => Get.snackbar('Info', 'Halaman Laporan belum dibuat'),
-          ),
-          _buildNavItem(
-            icon: Icons.history,
-            label: 'Riwayat',
-            onTap: () => Get.snackbar('Info', 'Halaman Riwayat belum dibuat'),
-          ),
-          _buildNavItem(
-            icon: Icons.person,
-            label: 'Profile',
-            onTap: () => Get.toNamed(AppRoutes.profileScreen),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNavItem({
-    required IconData icon,
-    required String label,
-    bool isActive = false,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            height: 40,
-            width: 40,
-            decoration: BoxDecoration(
-              color: isActive ? Colors.white : Colors.transparent,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              icon,
-              size: 22,
-              color: isActive ? const Color(0xFF1E88E5) : Colors.white,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 12,
-              color: Colors.white,
-            ),
-          )
-        ],
-      ),
-    );
+    return tooltip != null ? Tooltip(message: tooltip, child: button) : button;
   }
 }
 
@@ -373,18 +268,19 @@ class DashedRectPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth;
+    final paint =
+        Paint()
+          ..color = color
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = strokeWidth;
 
-    final path = Path()
-      ..addRRect(
-        RRect.fromRectAndRadius(
-          Rect.fromLTWH(0, 0, size.width, size.height),
-          const Radius.circular(16),
-        ),
-      );
+    final path =
+        Path()..addRRect(
+          RRect.fromRectAndRadius(
+            Rect.fromLTWH(0, 0, size.width, size.height),
+            const Radius.circular(16),
+          ),
+        );
 
     final dashed = Path();
     double distance = 0.0;

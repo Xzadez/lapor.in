@@ -16,6 +16,8 @@ import 'package:laporin/app/presentation/profile_screen/profile_screen.dart';
 import 'package:laporin/app/presentation/profile_screen/binding/profile_binding.dart';
 import 'package:laporin/app/presentation/detail_laporan_screen/detail_laporan_screen.dart';
 import 'package:laporin/app/presentation/detail_laporan_screen/binding/detail_laporan_binding.dart';
+import 'package:laporin/app/presentation/qr_scan_screen/binding/qr_scan_binding.dart';
+import 'package:laporin/app/presentation/qr_scan_screen/qr_scan_screen.dart';
 import 'package:laporin/app/presentation/register_screen/bindings/register_binding.dart';
 import 'package:laporin/app/presentation/register_screen/register_screen.dart';
 import 'package:laporin/app/presentation/reset_password_screen/binding/reset_password_binding.dart';
@@ -76,6 +78,11 @@ class AppPages {
       name: AppRoutes.jointMember, // Sesuaikan dengan AppRoutes
       page: () => const JoinMemberScreen(),
       binding: JoinMemberBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.qrScanScreen,
+      page: () => const QrScanScreen(),
+      binding: QrScanBinding(),
     ),
     GetPage(
       name: AppRoutes.lupaPasswordScreen,

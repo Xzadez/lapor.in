@@ -49,7 +49,7 @@ class JoinMemberController extends GetxController {
 
   void onTapScanQR() {
     // Nanti diarahkan ke layar Scanner Camera
-    Get.snackbar("Info", "Fitur Kamera Scan QR akan segera hadir");
+    Get.toNamed(AppRoutes.qrScanScreen);
   }
 
   void onTapInputCode() {

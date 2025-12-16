@@ -19,6 +19,7 @@ dependencies:
   pin_code_fields: ^8.0.1
   supabase_flutter: ^2.12.0
   flutter_dotenv: ^6.0.0
+  flutter_native_splash: ^2.4.7
 
 dev_dependencies:
   flutter_test:
@@ -32,3 +33,15 @@ flutter:
     - .env
     - assets/images/logo.png
     - assets/images/visibility.svg
+
+flutter_native_splash:
+  color: "#FFFFFF" 
+  
+  image: assets/images/splashscreen.png
+  
+  fullscreen: true
+
+  android_12:
+    image: assets/images/splashscreen.png
+    color: "#FFFFFF"
+    icon_background_color: "#FFFFFF"

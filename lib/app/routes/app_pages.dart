@@ -104,7 +104,7 @@ class AppPages {
     ),
     GetPage(
       name: AppRoutes.formLaporanScreen,
-      page: () => const FormLaporanScreen(),
+      page: () => FormLaporanScreen(),
       binding: FormLaporanBinding(),
     ),
   ];

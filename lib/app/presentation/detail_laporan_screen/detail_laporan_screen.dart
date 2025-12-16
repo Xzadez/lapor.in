@@ -5,7 +5,7 @@ import 'controller/detail_laporan_controller.dart';
 class DetailLaporanScreen extends StatelessWidget {
   const DetailLaporanScreen({super.key});
 
-  Color _statusColor(String status) {
+  Color _getStatusColor(String status) {
     switch (status.toUpperCase()) {
       case "DITERIMA":
         return Colors.green;
@@ -13,7 +13,8 @@ class DetailLaporanScreen extends StatelessWidget {
         return Colors.blue;
       case "DITOLAK":
       default:
-        return Colors.red;
+        // Warna merah agak soft/pastel sesuai gambar
+        return const Color(0xFFFF5252);
     }
   }
 
@@ -23,19 +24,35 @@ class DetailLaporanScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      // 1. APP BAR PUTIH
       appBar: AppBar(
-        elevation: 0,
         backgroundColor: Colors.white,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Get.back(),
-        ),
+        elevation: 0, // Hilangkan bayangan agar terlihat flat
         centerTitle: true,
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.grey.shade300),
+            ),
+            child: IconButton(
+              icon: const Icon(
+                Icons.arrow_back_ios_new,
+                size: 16,
+                color: Colors.black,
+              ),
+              onPressed: () => Get.back(),
+              padding: EdgeInsets.zero, // Agar icon pas di tengah lingkaran
+            ),
+          ),
+        ),
         title: const Text(
           "Detail Laporan",
           style: TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.bold,
+            fontSize: 18,
           ),
         ),
       ),
@@ -43,115 +60,154 @@ class DetailLaporanScreen extends StatelessWidget {
         final laporan = controller.laporan;
         final status = controller.status.value;
         final alasan = controller.alasan.value;
-        final color = _statusColor(status);
+        final themeColor = _getStatusColor(status);
 
         return SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Stack(
             children: [
+              // ------------------------------------------------
+              // LAYER 1: Header Image & Text (Background Merah)
+              // ------------------------------------------------
               Container(
+                height: 350, // Tinggi area merah
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 16),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.3),
-                  borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(25),
-                    bottomRight: Radius.circular(25),
+                  image: DecorationImage(
+                    image: NetworkImage(laporan["gambar"] ?? ""),
+                    fit: BoxFit.cover,
                   ),
+                ),
+                child: Container(
+                  // Overlay Warna
+                  decoration: BoxDecoration(
+                    color: themeColor.withOpacity(0.85),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 40,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        status.toUpperCase(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 1.2,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      RichText(
+                        text: TextSpan(
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            height: 1.4,
+                          ),
+                          children: [
+                            TextSpan(
+                              text:
+                                  "Alasan ${status == 'DITOLAK' ? 'Ditolak' : 'Status'} adalah ",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            TextSpan(
+                              text: alasan,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              // ------------------------------------------------
+              // LAYER 2: Konten Putih (Overlap ke atas)
+              // ------------------------------------------------
+              Container(
+                // Margin atas untuk mendorong container putih ke bawah
+                // tapi membiarkannya menumpuk sedikit di atas area merah
+                margin: const EdgeInsets.only(top: 300),
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
+                  ),
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 30,
                 ),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Tags
+                    Row(
+                      children: [
+                        _buildTag(laporan["urgensi"]!, const Color(0xFFFF5252)),
+                        const SizedBox(width: 12),
+                        _buildTag(
+                          laporan["kategori"]!,
+                          const Color(0xFF4DB6AC),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Judul Laporan
                     Text(
-                      status,
-                      style: TextStyle(
-                        color: color,
-                        fontSize: 20,
+                      laporan["judul"]!,
+                      style: const TextStyle(
+                        fontSize: 22,
                         fontWeight: FontWeight.bold,
+                        color: Colors.black87,
                       ),
                     ),
-                    const SizedBox(height: 10),
-                    RichText(
-                      textAlign: TextAlign.center,
-                      text: TextSpan(
-                        style: const TextStyle(color: Colors.white, fontSize: 15),
-                        children: [
-                          TextSpan(
-                            text: "Alasan ${status == 'DITOLAK' ? 'Ditolak' : 'Diterima'} adalah ",
-                            style: const TextStyle(fontWeight: FontWeight.bold),
+                    const SizedBox(height: 12),
+
+                    // Pengirim & Waktu
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          laporan["pengirim"]!,
+                          style: TextStyle(
+                            color: Colors.grey[400],
+                            fontSize: 14,
                           ),
-                          TextSpan(text: alasan),
-                        ],
+                        ),
+                        Text(
+                          laporan["waktu"]!,
+                          style: TextStyle(
+                            color: Colors.grey[400],
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
+
+                    // Deskripsi
+                    Text(
+                      laporan["deskripsi"]!,
+                      textAlign: TextAlign.justify,
+                      style: const TextStyle(
+                        color: Colors.black87,
+                        fontSize: 15,
+                        height: 1.6,
                       ),
                     ),
+                    const SizedBox(height: 50), // Spasi bawah tambahan
                   ],
-                ),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
-                  child: Image.network(
-                    laporan["gambar"] ?? "",
-                    height: 180,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                    errorBuilder: (c, e, s) =>
-                        Container(height: 180, color: Colors.grey.shade300,
-                          alignment: Alignment.center,
-                          child: const Text("Gambar tidak tersedia"),
-                        ),
-                  ),
-                ),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(children: [
-                        _buildTag(laporan["urgensi"]!, Colors.red),
-                        const SizedBox(width: 8),
-                        _buildTag(laporan["kategori"]!, Colors.teal),
-                      ]),
-                      const SizedBox(height: 12),
-                      Text(
-                        laporan["judul"]!,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(laporan["pengirim"]!, style: const TextStyle(color: Colors.grey)),
-                          Text(laporan["waktu"]!, style: const TextStyle(color: Colors.grey)),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        laporan["deskripsi"]!,
-                        textAlign: TextAlign.justify,
-                        style: const TextStyle(fontSize: 14, height: 1.5),
-                      ),
-                    ],
-                  ),
                 ),
               ),
             ],
@@ -161,16 +217,21 @@ class DetailLaporanScreen extends StatelessWidget {
     );
   }
 
+  // Widget Tag
   Widget _buildTag(String text, Color color) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.15),
-        borderRadius: BorderRadius.circular(10),
+        color: color,
+        borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
         text,
-        style: TextStyle(color: color, fontWeight: FontWeight.w500, fontSize: 12),
+        style: const TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.w600,
+          fontSize: 12,
+        ),
       ),
     );
   }

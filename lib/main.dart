@@ -18,18 +18,11 @@ void main() async {
     url: dotenv.env['SUPABASE_URL'] ?? '',
     anonKey: dotenv.env['SUPABASE_ANON_KEY'] ?? '',
   );
-
-  final session = Supabase.instance.client.auth.currentSession;
-
-  final String initialRoute =
-      session != null ? AppRoutes.mainScreen : AppPages.INITIAL;
-
-  runApp(MyApp(initialRoute: initialRoute));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final String initialRoute;
-  const MyApp({super.key, required this.initialRoute});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +31,7 @@ class MyApp extends StatelessWidget {
         return GetMaterialApp(
           title: "Application",
           debugShowCheckedModeBanner: false,
-          initialRoute: initialRoute,
+          initialRoute: AppRoutes.SPLASH_SCREEN,
           getPages: AppPages.routes,
           theme: theme,
         );

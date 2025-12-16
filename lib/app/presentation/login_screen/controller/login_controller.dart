@@ -62,7 +62,6 @@ class LoginController extends GetxController {
   // Handle login button tap
   void onTapLogin(GlobalKey<FormState> formKey) async {
     FocusManager.instance.primaryFocus?.unfocus();
-    final screenHeight = MediaQuery.of(Get.context!).size.height;
 
     if (!formKey.currentState!.validate()) {
       return;
@@ -81,19 +80,8 @@ class LoginController extends GetxController {
         password: passwordController.text,
       );
 
-      loginModel.value?.email?.value = emailController.text.trim();
-      loginModel.value?.password?.value = passwordController.text.trim();
-
       if (res.session != null) {
-        emailController.clear();
-        passwordController.clear();
-        showEmailError.value = false;
-        CustomSnackBar.show(
-          message: 'Login Berhasil: Selamat datang di Lapor.in',
-          isError: false,
-        );
-
-        Get.offAllNamed(AppRoutes.mainScreen);
+        await _checkUserRole(res.session!.user.id);
       }
     } on AuthException catch (e) {
       String message = e.message;
@@ -108,6 +96,37 @@ class LoginController extends GetxController {
       CustomSnackBar.show(message: 'Terjadi kesalahan sistem.', isError: true);
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  Future<void> _checkUserRole(String userId) async {
+    try {
+      final data =
+          await supabase
+              .from('profiles')
+              .select('role')
+              .eq('id', userId)
+              .maybeSingle();
+
+      // Bersihkan controller
+      emailController.clear();
+      passwordController.clear();
+      showEmailError.value = false;
+
+      CustomSnackBar.show(
+        message: 'Login Berhasil: Selamat datang di Lapor.in',
+        isError: false,
+      );
+
+      // --- PENENTUAN ARAH NAVIGASI ---
+      if (data == null || data['role'] == null || data['role'] == '') {
+        Get.offAllNamed(AppRoutes.selectedRoleScreen);
+      } else {
+        Get.offAllNamed(AppRoutes.mainScreen);
+      }
+    } catch (e) {
+      print("Error Check Role: $e");
+      Get.offAllNamed(AppRoutes.mainScreen);
     }
   }
 

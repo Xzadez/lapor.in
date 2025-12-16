@@ -24,6 +24,8 @@ import 'package:laporin/app/presentation/laporan_screen/laporan_screen.dart';
 import 'package:laporin/app/presentation/laporan_screen/binding/laporan_binding.dart';
 import 'package:laporin/app/presentation/riwayat_screen/riwayat_screen.dart';
 import 'package:laporin/app/presentation/riwayat_screen/binding/riwayat_binding.dart';
+import 'package:laporin/app/presentation/form_laporan/form_laporan_screen.dart';
+import 'package:laporin/app/presentation/form_laporan/binding/form_laporan_binding.dart';
 
 import 'app_routes.dart';
 
@@ -99,6 +101,11 @@ class AppPages {
       name: AppRoutes.riwayatScreen,
       page: () => const RiwayatScreen(),
       binding: RiwayatBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.formLaporanScreen,
+      page: () => const FormLaporanScreen(),
+      binding: FormLaporanBinding(),
     ),
   ];
 }

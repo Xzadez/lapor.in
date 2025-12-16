@@ -17,4 +17,5 @@ abstract class AppRoutes {
   static const laporanScreen = '/laporan_screen';
   static const riwayatScreen = '/riwayat_screen';
   static const formLaporanScreen = '/form_laporan_screen';
+  static const pengurusBeranda = '/pengurus-beranda';
 }

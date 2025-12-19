@@ -37,6 +37,9 @@ import 'package:laporin/app/presentation/form_laporan/form_laporan_screen.dart';
 import 'package:laporin/app/presentation/form_laporan/binding/form_laporan_binding.dart';
 import 'package:laporin/app/presentation/pengurus_beranda_screen/pengurus_beranda_screen.dart';
 import 'package:laporin/app/presentation/pengurus_beranda_screen/binding/pengurus_beranda_binding.dart';
+import 'package:laporin/app/presentation/pengurus_report_screen/pengurus_report_screen.dart';
+import 'package:laporin/app/presentation/pengurus_report_screen/binding/pengurus_report_binding.dart';
+
 
 import 'app_routes.dart';
 
@@ -148,6 +151,11 @@ class AppPages {
       name: AppRoutes.pengurusBeranda,
       page: () => const PengurusBerandaScreen(),
       binding: PengurusBerandaBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.pengurusLaporan,
+      page: () => ReportScreen(),
+      binding: ReportBinding(),
     ),
   ];
 }

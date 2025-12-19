@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'controller/pengurus_laporan_controller.dart';
+import 'controller/pengurus_report_controller.dart';
 
-class LaporanScreen extends GetView<LaporanController> {
-  const LaporanScreen({super.key});
+class ReportScreen extends GetView<LaporanController> {
+  const ReportScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

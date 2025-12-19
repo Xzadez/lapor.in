@@ -44,7 +44,7 @@ class AppPages {
   AppPages._(); // Private constructor
 
   // static const INITIAL = AppRoutes.initialRoute;
-  static const INITIAL = AppRoutes.SPLASH_SCREEN;
+  static const INITIAL = AppRoutes.pengurusBeranda;
 
   // Ubah nama dari 'pages' menjadi 'routes'
   static final routes = [

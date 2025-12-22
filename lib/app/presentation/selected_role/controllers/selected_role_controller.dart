@@ -20,10 +20,7 @@ class SelectedRoleController extends GetxController {
     // Contoh: Get.toNamed(AppRoutes.createInstanceScreen);
 
     print("User memilih: Buat Komunitas Baru");
-    Get.snackbar(
-      "Info",
-      "Fitur Buat Komunitas akan segera hadir (Navigasi ke Form Registrasi RT/RW)",
-    );
+    Get.toNamed(AppRoutes.createMember);
   }
 
   // 3. Logic LEWATI (Opsional)

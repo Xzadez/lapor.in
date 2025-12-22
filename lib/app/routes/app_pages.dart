@@ -12,6 +12,8 @@ import 'package:laporin/app/presentation/lupa_password_screen/binding/lupa_passw
 import 'package:laporin/app/presentation/lupa_password_screen/lupa_password_screen.dart';
 import 'package:laporin/app/presentation/main_screen/binding/main_binding.dart';
 import 'package:laporin/app/presentation/main_screen/main_screen.dart';
+import 'package:laporin/app/presentation/manage_member_screen/binding/manage_member.dart';
+import 'package:laporin/app/presentation/manage_member_screen/manage_member_screen.dart';
 import 'package:laporin/app/presentation/otp_screen/binding/otp_binding.dart';
 import 'package:laporin/app/presentation/otp_screen/otp_screen.dart';
 import 'package:laporin/app/presentation/profile_screen/profile_screen.dart';
@@ -79,7 +81,7 @@ class AppPages {
       bindings: [SelectedRoleBinding()],
     ),
     GetPage(
-      name: AppRoutes.jointMember, // Sesuaikan dengan AppRoutes
+      name: AppRoutes.jointMember,
       page: () => const JoinMemberScreen(),
       binding: JoinMemberBinding(),
     ),
@@ -87,6 +89,11 @@ class AppPages {
       name: AppRoutes.createMember,
       page: () => const CreateMemberScreen(),
       binding: CreateMemberBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.manageMember,
+      page: () => const ManageMemberScreen(),
+      binding: ManageMemberBinding(),
     ),
     GetPage(
       name: AppRoutes.qrScanScreen,

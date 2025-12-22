@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:laporin/app/routes/app_routes.dart';
 import 'controller/profile_controller.dart';
 
 class ProfileScreen extends GetView<ProfileController> {
@@ -83,13 +84,10 @@ class ProfileScreen extends GetView<ProfileController> {
                 if (showPrivilegedMenu) ...[
                   _buildMenuTile(
                     icon: Icons.people_alt_rounded,
-                    title: "Data Pengurus",
-                    subtitle: "Kelola daftar pengurus RT/RW",
+                    title: "Data Anggota",
+                    subtitle: "Kelola daftar Warga & pengurus RT/RW",
                     onTap: () {
-                      Get.snackbar(
-                        "Info",
-                        "Fitur Kelola Pengurus akan segera hadir",
-                      );
+                      Get.toNamed(AppRoutes.manageMember);
                     },
                     isHighlight: true,
                   ),

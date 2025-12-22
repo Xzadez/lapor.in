@@ -14,61 +14,37 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Stack(
-        children: [
-          // ===================== SCROLL CONTENT (SAFE AREA) =====================
-          SafeArea(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 100),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildHeader(),
-                  const SizedBox(height: 16),
-                  _buildCarousel(controller, width),
-                  const SizedBox(height: 16),
-                  const Center(
-                    child: Text(
-                      "Silahkan klik ikon '+' untuk tambah laporan",
-                      style: TextStyle(fontSize: 13, color: Colors.black87),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  _buildTambahLaporanBox(),
-                  const SizedBox(height: 24),
-
-                  const Text(
-                    "Berita Terkini",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-
-                  const SizedBox(height: 12),
-                  _buildBeritaTerkiniCard(),
-                ],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 100),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeader(),
+              const SizedBox(height: 16),
+              _buildCarousel(controller, width),
+              const SizedBox(height: 16),
+              const Center(
+                child: Text(
+                  "Silahkan klik ikon '+' untuk tambah laporan",
+                  style: TextStyle(fontSize: 13, color: Colors.black87),
+                  textAlign: TextAlign.center,
+                ),
               ),
-            ),
-          ),
+              const SizedBox(height: 16),
+              _buildTambahLaporanBox(),
+              const SizedBox(height: 24),
 
-          // ===================== FLOATING BUBBLE =====================
-          Positioned(
-            bottom: 20,
-            right: 16,
-            child: Column(
-              children: [
-                _roundIconButton(
-                  Icons.mic,
-                  tooltip: 'Aktifkan perintah suara?',
-                ),
-                const SizedBox(height: 12),
-                _roundIconButton(
-                  Icons.text_increase,
-                  tooltip: 'Ganti ukuran huruf?',
-                ),
-              ],
-            ),
+              const Text(
+                "Berita Terkini",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+
+              const SizedBox(height: 12),
+              _buildBeritaTerkiniCard(),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -236,25 +212,6 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  // ========================= FLOATING BUBBLE =========================
-  static Widget _roundIconButton(
-    IconData icon, {
-    double size = 40,
-    String? tooltip,
-  }) {
-    final button = Container(
-      height: size,
-      width: size,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        shape: BoxShape.circle,
-      ),
-      child: Icon(icon, size: size * 0.55, color: Color(0xFF1E88E5)),
-    );
-
-    return tooltip != null ? Tooltip(message: tooltip, child: button) : button;
   }
 }
 

@@ -6,9 +6,14 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class ProfileController extends GetxController {
   final supabase = Supabase.instance.client;
 
-  // Variable Observable untuk menampung data user
   var isLoading = true.obs;
   var userProfile = <String, dynamic>{}.obs;
+
+  // Getter untuk Logic Menu (Data Pengurus hanya bisa diakses admin/ketua)
+  bool get isAdminOrPengurus {
+    final r = (userProfile['role_original'] ?? '').toString().toLowerCase();
+    return r.contains('admin') || r.contains('ketua') || r.contains('pengurus');
+  }
 
   @override
   void onInit() {
@@ -16,7 +21,6 @@ class ProfileController extends GetxController {
     fetchUserProfile();
   }
 
-  // --- FUNGSI AMBIL DATA PROFIL ---
   void fetchUserProfile() async {
     try {
       isLoading.value = true;
@@ -27,53 +31,59 @@ class ProfileController extends GetxController {
         return;
       }
 
-      // Query ke tabel 'profiles'
-      // Kita gunakan select('*, communities(name)') untuk join otomatis ke tabel komunitas
-      // Syarat: Kolom community_id di profiles harus Foreign Key ke communities
+      // PERBAIKAN 1: Tambahkan 'role' di dalam .select()
       final data =
           await supabase
               .from('profiles')
               .select(
-                'first_name, last_name, birth_day, community_id, communities(name)',
+                'first_name, last_name, birth_day, role, community_id, communities(name)',
               )
               .eq('id', currentUser.id)
               .single();
 
-      // Format Data agar siap ditampilkan
       String fullName =
           "${data['first_name'] ?? ''} ${data['last_name'] ?? ''}".trim();
       String communityName = "Belum bergabung";
 
-      // Cek apakah ada data komunitas (karena join mengembalikan Map/JSON)
       if (data['communities'] != null) {
         communityName = data['communities']['name'];
       }
 
-      // Format Tanggal Lahir (Misal: 1990-01-01)
       String birthDay = "-";
       if (data['birth_day'] != null) {
         DateTime dt = DateTime.parse(data['birth_day']);
-        // Jika pakai intl: DateFormat('dd MMMM yyyy').format(dt);
-        // Manual sederhana:
         birthDay = "${dt.day}-${dt.month}-${dt.year}";
       }
 
-      // Update value userProfile
+      // PERBAIKAN 2: Tambahkan Logika Mapping Role
+      String rawRole = (data['role'] ?? 'warga').toString().toLowerCase();
+      String displayRole = 'Warga'; // Default awal
+
+      // Cek apakah Admin/Ketua/Pengurus
+      if (rawRole == 'admin' ||
+          rawRole.contains('ketua') ||
+          rawRole == 'pengurus') {
+        displayRole = 'Pengurus';
+      }
+
       userProfile.value = {
         'name': fullName.isEmpty ? 'User Tanpa Nama' : fullName,
-        'email': currentUser.email, // Email ambil langsung dari Auth
+        'email': currentUser.email,
         'birth_day': birthDay,
         'community_name': communityName,
-        'photoUrl': null, // Nanti bisa diupdate jika ada fitur upload foto
+        'role_display': displayRole, // Data untuk Tampilan (Pengurus/Warga)
+        'role_original': rawRole, // Data Asli (admin/ketua_rt/dll)
+        'photoUrl': null,
       };
     } catch (e) {
       print("Error Fetch Profile: $e");
-      // Fallback jika error (misal belum setup foreign key communities)
       userProfile.value = {
         'name': 'Error memuat data',
         'email': '-',
         'birth_day': '-',
         'community_name': '-',
+        'role_display': 'Warga',
+        'role_original': 'warga',
       };
     } finally {
       isLoading.value = false;

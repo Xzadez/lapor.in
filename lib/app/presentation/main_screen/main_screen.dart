@@ -15,9 +15,7 @@ class MainScreen extends StatelessWidget {
     final controller = Get.find<MainController>();
 
     return Scaffold(
-      // Extend body agar background curve menyatu dengan halaman
       extendBody: true,
-
       body: Obx(
         () => IndexedStack(
           index: controller.tabIndex.value,
@@ -29,11 +27,12 @@ class MainScreen extends StatelessWidget {
           ],
         ),
       ),
-
-      // Panggil Widget Navbar yang sudah kita pisah
+      // Kita bungkus dengan Obx agar warnanya update otomatis
       bottomNavigationBar: Obx(
         () => CustomBottomNavBar(
           selectedIndex: controller.tabIndex.value,
+          // Kirim warna dinamis ke sini
+          navColor: controller.themeColor.value,
           onItemSelected: (index) {
             controller.changeTabIndex(index);
           },

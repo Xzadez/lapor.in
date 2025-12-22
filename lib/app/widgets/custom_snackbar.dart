@@ -34,7 +34,7 @@ class CustomSnackBar {
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         margin: EdgeInsets.only(
-          bottom: screenHeight - 160,
+          bottom: screenHeight - 220,
           left: 20,
           right: 20,
         ),

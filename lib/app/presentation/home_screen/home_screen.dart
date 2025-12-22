@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:laporin/app/widgets/custom_snackbar.dart';
 import '../../routes/app_routes.dart';
 import 'controller/home_controller.dart';
 
@@ -171,44 +172,49 @@ class HomeScreen extends StatelessWidget {
 
   // ========================= BERITA TERKINI CARD =========================
   Widget _buildBeritaTerkiniCard() {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "20 Oktober 2025",
-            style: TextStyle(fontSize: 11, color: Colors.grey),
-          ),
-          const SizedBox(height: 4),
+    return GestureDetector(
+      onTap: () {
+        Get.toNamed(AppRoutes.detailLaporanScreen);
+      },
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(18),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "20 Oktober 2025",
+              style: TextStyle(fontSize: 11, color: Colors.grey),
+            ),
+            const SizedBox(height: 4),
 
-          const Text(
-            "Judul Laporan",
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-          ),
+            const Text(
+              "Judul Laporan",
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+            ),
 
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              _buildBadge("Urgent", Colors.red),
-              const SizedBox(width: 8),
-              _buildBadge("Kategori", Colors.green),
-            ],
-          ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                _buildBadge("Urgent", Colors.red),
+                const SizedBox(width: 8),
+                _buildBadge("Kategori", Colors.green),
+              ],
+            ),
 
-          const SizedBox(height: 12),
-        ],
+            const SizedBox(height: 12),
+          ],
+        ),
       ),
     );
   }

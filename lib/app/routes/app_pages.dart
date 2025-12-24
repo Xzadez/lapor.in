@@ -1,5 +1,7 @@
 // File: app/routes/app_pages.dart
 import 'package:get/get.dart';
+import 'package:laporin/app/presentation/add_member_screen/add_member_screen.dart';
+import 'package:laporin/app/presentation/add_member_screen/binding/add_member_binding.dart';
 import 'package:laporin/app/presentation/app_navigation_screen/app_navigation_screen.dart';
 import 'package:laporin/app/presentation/app_navigation_screen/binding/app_navigation_binding.dart';
 import 'package:laporin/app/presentation/create_member_screen/binding/create_member_binding.dart';
@@ -94,6 +96,11 @@ class AppPages {
       name: AppRoutes.manageMember,
       page: () => const ManageMemberScreen(),
       binding: ManageMemberBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.addMember,
+      page: () => const AddMemberScreen(),
+      binding: AddMemberBinding(),
     ),
     GetPage(
       name: AppRoutes.qrScanScreen,

@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:laporin/app/routes/app_routes.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../model/manage_member_model.dart'; // Pastikan nama file model disesuaikan
 
@@ -60,6 +61,6 @@ class ManageMemberController extends GetxController {
   }
 
   void onTapAddMember() {
-    Get.snackbar("Info", "Modul Tambah Anggota akan dibuat selanjutnya.");
+    Get.toNamed(AppRoutes.addMember);
   }
 }

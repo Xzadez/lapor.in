@@ -38,10 +38,13 @@ class QrScanScreen extends GetView<QrScanController> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  // Tombol Back
                   _circleButton(
                     icon: Icons.arrow_back,
                     onTap: () => Get.back(),
                   ),
+
+                  // Judul
                   const Text(
                     "Pindai QR Code",
                     style: TextStyle(
@@ -51,9 +54,22 @@ class QrScanScreen extends GetView<QrScanController> {
                       shadows: [Shadow(color: Colors.black, blurRadius: 4)],
                     ),
                   ),
-                  _circleButton(
-                    icon: Icons.flash_on,
-                    onTap: controller.toggleTorch,
+
+                  // Kanan: Row untuk Flash & Galeri
+                  Row(
+                    children: [
+                      // Tombol Galeri (BARU)
+                      _circleButton(
+                        icon: Icons.image_outlined,
+                        onTap: controller.pickQrFromGallery,
+                      ),
+                      const SizedBox(width: 12), // Jarak antar tombol
+                      // Tombol Flash
+                      _circleButton(
+                        icon: Icons.flash_on,
+                        onTap: controller.toggleTorch,
+                      ),
+                    ],
                   ),
                 ],
               ),

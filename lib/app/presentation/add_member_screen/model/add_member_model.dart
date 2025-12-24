@@ -1,22 +1,19 @@
 class AddMemberModel {
-  String firstName;
-  String lastName;
+  String name; // Dulu username, sekarang Name (Nama Lengkap/Label)
   String role;
 
-  AddMemberModel({
-    required this.firstName,
-    required this.lastName,
-    required this.role,
-  });
+  AddMemberModel({required this.name, required this.role});
 
-  // Mengubah Object menjadi JSON (Map) untuk dikirim ke API atau Screen lain
-  Map<String, dynamic> toJson() {
-    return {'first_name': firstName, 'last_name': lastName, 'role': role};
+  factory AddMemberModel.fromJson(Map<String, dynamic> json) {
+    return AddMemberModel(
+      name: json['name'] ?? '',
+      role: json['role'] ?? 'warga',
+    );
   }
 
-  // Helper untuk menampilkan nama lengkap (Opsional)
-  String get fullName => "$firstName $lastName".trim();
+  Map<String, dynamic> toJson() {
+    return {'name': name, 'role': role};
+  }
 
-  // Helper untuk menampilkan role yang rapi (Opsional)
   String get displayRole => role.replaceAll('_', ' ').toUpperCase();
 }

@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-// import '../../../../routes/app_routes.dart'; // Uncomment jika route generate code sudah ada
-import '../model/add_member_model.dart'; // Import Model
+import 'package:laporin/app/routes/app_routes.dart';
+import '../model/add_member_model.dart';
 
 class AddMemberController extends GetxController {
-  // Text Controllers
-  final firstNameC = TextEditingController();
-  final lastNameC = TextEditingController();
+  // Ganti jadi Name Controller
+  final nameC = TextEditingController();
 
-  // Role Selection (Default 'warga')
   var selectedRole = 'warga'.obs;
 
-  // Opsi Dropdown
   final List<Map<String, String>> roleOptions = [
     {'value': 'warga', 'label': 'Warga'},
     {'value': 'ketua_rt', 'label': 'Ketua RT'},
@@ -20,43 +17,32 @@ class AddMemberController extends GetxController {
 
   @override
   void onClose() {
-    firstNameC.dispose();
-    lastNameC.dispose();
+    nameC.dispose();
     super.onClose();
   }
 
   void onTapNext() {
-    // 1. Validasi
-    if (firstNameC.text.trim().isEmpty) {
+    // 1. Validasi Nama
+    if (nameC.text.trim().isEmpty) {
       Get.snackbar(
         "Peringatan",
-        "Nama depan wajib diisi",
+        "Nama anggota wajib diisi",
         backgroundColor: Colors.amber.withOpacity(0.2),
       );
       return;
     }
 
-    // 2. Buat Object Model
+    // 2. Buat Model dengan Nama
     final newMember = AddMemberModel(
-      firstName: firstNameC.text.trim(),
-      lastName: lastNameC.text.trim(),
+      name: nameC.text.trim(),
       role: selectedRole.value,
     );
 
-    // Debug print (Cek apakah model berfungsi)
-    print(
-      "Siap generate code untuk: ${newMember.fullName} sebagai ${newMember.displayRole}",
-    );
+    // 3. Kirim ke Halaman Selanjutnya
+    Get.toNamed(AppRoutes.generateCode, arguments: newMember.toJson());
 
-    // 3. Kirim Model ke Halaman Selanjutnya (Generate Code)
-    // Gunakan .toJson() agar mudah diterima di halaman sebelah
-
-    // Get.toNamed(AppRoutes.generateCodeScreen, arguments: newMember.toJson());
-
-    Get.snackbar(
-      "Sukses",
-      "Data ${newMember.fullName} siap diproses!",
-      backgroundColor: Colors.green.withOpacity(0.1),
-    );
+    // Reset Form
+    nameC.clear();
+    selectedRole.value = 'warga';
   }
 }

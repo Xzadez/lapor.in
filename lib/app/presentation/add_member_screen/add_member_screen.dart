@@ -7,7 +7,6 @@ class AddMemberScreen extends GetView<AddMemberController> {
 
   @override
   Widget build(BuildContext context) {
-    // Warna tema Pengurus (Hijau Tosca)
     final Color themeColor = const Color(0xFF35BBA4);
 
     return Scaffold(
@@ -48,7 +47,7 @@ class AddMemberScreen extends GetView<AddMemberController> {
                   const SizedBox(width: 12),
                   const Expanded(
                     child: Text(
-                      "Masukkan identitas calon anggota. Kode undangan akan dibuat berdasarkan data ini.",
+                      "Masukkan nama calon anggota. Nama ini hanya sebagai label undangan.",
                       style: TextStyle(color: Colors.black87, fontSize: 13),
                     ),
                   ),
@@ -57,32 +56,18 @@ class AddMemberScreen extends GetView<AddMemberController> {
             ),
             const SizedBox(height: 24),
 
-            // --- INPUT NAMA ---
-            const Text(
-              "Nama Lengkap",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
+            // --- INPUT USERNAME (UPDATE DI SINI) ---
+            const Text("Nama", style: TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-            Row(
-              children: [
-                Expanded(
-                  child: _buildTextField(
-                    controller: controller.firstNameC,
-                    hint: "Nama Depan",
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _buildTextField(
-                    controller: controller.lastNameC,
-                    hint: "Nama Belakang",
-                  ),
-                ),
-              ],
+            _buildTextField(
+              controller: controller.nameC, // Pakai controller baru
+              hint: "Contoh: budi_santoso",
+              icon: Icons.alternate_email, // Icon @ agar jelas ini username
             ),
+
             const SizedBox(height: 20),
 
-            // --- DROPDOWN ROLE ---
+            // --- DROPDOWN ROLE (TETAP SAMA) ---
             const Text(
               "Peran / Jabatan",
               style: TextStyle(fontWeight: FontWeight.bold),
@@ -150,6 +135,7 @@ class AddMemberScreen extends GetView<AddMemberController> {
   Widget _buildTextField({
     required TextEditingController controller,
     required String hint,
+    IconData? icon,
   }) {
     return Container(
       decoration: BoxDecoration(
@@ -162,6 +148,7 @@ class AddMemberScreen extends GetView<AddMemberController> {
         decoration: InputDecoration(
           hintText: hint,
           hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14),
+          prefixIcon: icon != null ? Icon(icon, color: Colors.grey) : null,
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 16,

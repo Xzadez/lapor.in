@@ -13,6 +13,7 @@ abstract class AppRoutes {
   static const jointMember = '/join_member_screen';
   static const createMember = '/create_member_screen';
   static const manageMember = '/manage_member_screen';
+  static const generateCode = '/generate_code_screen';
   static const addMember = '/add_member_screen';
   static const lupaPasswordScreen = '/lupa_password_screen';
   static const otpScreen = '/otp_screen';

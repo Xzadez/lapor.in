@@ -7,7 +7,7 @@ class LaporanModel {
   String kategori;
   String? fotoUrl;
   String status;
-  String priority;
+  String? priority; // 1. Ubah jadi Nullable
 
   LaporanModel({
     this.id,
@@ -18,7 +18,7 @@ class LaporanModel {
     required this.kategori,
     this.fotoUrl,
     this.status = 'menunggu',
-    this.priority = 'sedang',
+    this.priority, // 2. Hapus default = 'sedang'
   });
 
   Map<String, dynamic> toJson() {
@@ -30,7 +30,7 @@ class LaporanModel {
       'kategori': kategori,
       'foto_url': fotoUrl,
       'status': status,
-      'priority': priority,
+      'priority': priority, // 3. Ini akan mengirim null jika tidak diisi
     };
   }
 }

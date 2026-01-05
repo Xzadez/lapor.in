@@ -2,25 +2,22 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart'; // Import intl untuk format tanggal
+import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:laporin/app/widgets/custom_snackbar.dart'; // Gunakan snackbar overlay Anda
+import 'package:laporin/app/widgets/custom_snackbar.dart';
 
 class FormLaporanController extends GetxController {
   final supabase = Supabase.instance.client;
 
-  // Input Controllers
   final namaC = TextEditingController();
   final deskripsiC = TextEditingController();
-  final tanggalC = TextEditingController(); // Untuk tampilan teks tanggal
+  final tanggalC = TextEditingController();
 
-  // Variables
   var selectedDate = DateTime.now().obs;
   var selectedCategory = 'Fasilitas'.obs;
   var selectedImage = Rx<File?>(null);
   var isLoading = false.obs;
 
-  // Opsi Kategori
   final List<String> categories = [
     'Fasilitas',
     'Keamanan',
@@ -33,11 +30,7 @@ class FormLaporanController extends GetxController {
   void onInit() {
     super.onInit();
     _autoFillUserData();
-    // Set tanggal default hari ini
-    tanggalC.text = DateFormat(
-      'dd MMMM yyyy',
-      'id_ID',
-    ).format(selectedDate.value);
+    _initDateText();
   }
 
   @override
@@ -48,31 +41,39 @@ class FormLaporanController extends GetxController {
     super.onClose();
   }
 
-  // 1. Auto Fill Nama (UX: Biar user gak ngetik nama sendiri)
-  // 1. Auto Fill Nama (FIXED)
+  void _initDateText() {
+    try {
+      tanggalC.text = DateFormat(
+        'dd MMMM yyyy',
+        'id_ID',
+      ).format(selectedDate.value);
+    } catch (e) {
+      tanggalC.text = DateFormat('dd MMMM yyyy').format(selectedDate.value);
+    }
+  }
+
   void _autoFillUserData() async {
     final user = supabase.auth.currentUser;
     if (user != null) {
-      // UBAH SELECT: ambil first_name dan last_name, bukan 'name'
-      final data =
-          await supabase
-              .from('profiles')
-              .select('first_name, last_name')
-              .eq('id', user.id)
-              .single();
+      try {
+        final data =
+            await supabase
+                .from('profiles')
+                .select('first_name, last_name')
+                .eq('id', user.id)
+                .single();
 
-      if (data != null) {
-        // Gabungkan First & Last Name
-        String first = data['first_name'] ?? '';
-        String last = data['last_name'] ?? '';
-
-        // Isi ke TextField
-        namaC.text = '$first $last'.trim();
+        if (data != null) {
+          String first = data['first_name'] ?? '';
+          String last = data['last_name'] ?? '';
+          namaC.text = '$first $last'.trim();
+        }
+      } catch (e) {
+        print("Gagal ambil nama profile: $e");
       }
     }
   }
 
-  // 2. Pilih Tanggal
   void pickDate(BuildContext context) async {
     DateTime? picked = await showDatePicker(
       context: context,
@@ -91,12 +92,10 @@ class FormLaporanController extends GetxController {
 
     if (picked != null) {
       selectedDate.value = picked;
-      // Format tanggal Indonesia (Perlu setting locale di main.dart idealnya, tapi ini hardcode format dulu)
-      tanggalC.text = DateFormat('dd MMMM yyyy').format(picked);
+      _initDateText();
     }
   }
 
-  // 3. Pilih Gambar (Galeri)
   void pickImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(
@@ -109,11 +108,20 @@ class FormLaporanController extends GetxController {
     }
   }
 
-  // 4. Submit Laporan
+  // LOGIC KIRIM (UPDATED)
   void submitLaporan() async {
+    // 1. Validasi Input (Foto Wajib)
     if (namaC.text.isEmpty || deskripsiC.text.isEmpty) {
       CustomSnackBar.show(
-        message: "Mohon lengkapi semua data wajib *",
+        message: "Mohon lengkapi deskripsi laporan",
+        isError: true,
+      );
+      return;
+    }
+
+    if (selectedImage.value == null) {
+      CustomSnackBar.show(
+        message: "Wajib menyertakan foto bukti!",
         isError: true,
       );
       return;
@@ -123,31 +131,25 @@ class FormLaporanController extends GetxController {
 
     try {
       final user = supabase.auth.currentUser;
-      if (user == null) throw "User tidak terdeteksi";
+      if (user == null) throw "Sesi habis. Silakan login ulang.";
 
       String? imageUrl;
 
-      // A. Upload Foto jika ada
-      if (selectedImage.value != null) {
-        final fileName = '${DateTime.now().millisecondsSinceEpoch}.jpg';
-        final path = 'laporan/$fileName';
+      // 2. Upload Foto
+      final fileName = '${DateTime.now().millisecondsSinceEpoch}.jpg';
+      final path = 'laporan/$fileName';
 
-        await supabase.storage
-            .from('laporan_images')
-            .upload(
-              path,
-              selectedImage.value!,
-              fileOptions: const FileOptions(
-                cacheControl: '3600',
-                upsert: false,
-              ),
-            );
+      await supabase.storage
+          .from('laporan_images')
+          .upload(
+            path,
+            selectedImage.value!,
+            fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
+          );
 
-        // Dapatkan URL Publik
-        imageUrl = supabase.storage.from('laporan_images').getPublicUrl(path);
-      }
+      imageUrl = supabase.storage.from('laporan_images').getPublicUrl(path);
 
-      // B. Insert Database
+      // 3. INSERT DATABASE (Priority NULL)
       await supabase.from('laporan').insert({
         'user_id': user.id,
         'nama_pelapor': namaC.text,
@@ -156,13 +158,17 @@ class FormLaporanController extends GetxController {
         'kategori': selectedCategory.value,
         'foto_url': imageUrl,
         'status': 'menunggu',
+        'priority': null, // <--- EKSPLISIT NULL DI SINI
       });
 
       CustomSnackBar.show(message: "Laporan berhasil dikirim!");
-      Get.back(); // Kembali ke halaman sebelumnya
+      Get.back();
     } catch (e) {
       print(e);
-      CustomSnackBar.show(message: "Gagal mengirim laporan: $e", isError: true);
+      String errorMsg = e.toString();
+      if (errorMsg.contains("SocketException"))
+        errorMsg = "Periksa koneksi internet Anda";
+      CustomSnackBar.show(message: "Gagal: $errorMsg", isError: true);
     } finally {
       isLoading.value = false;
     }

@@ -1,51 +1,66 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:laporin/app/core/app_export.dart';
+import 'package:laporin/app/widgets/custom_snackbar.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MainController extends GetxController {
-  var tabIndex = 0.obs;
-
-  // Warna Default (Biru Warga)
-  // Jika Admin/Pengurus akan berubah jadi Hijau Tosca (#35BBA4)
-  var themeColor = const Color(0xFF1E88E5).obs;
-
   final supabase = Supabase.instance.client;
+
+  var tabIndex = 0.obs;
+  var currentRole = 'warga'.obs;
 
   @override
   void onInit() {
     super.onInit();
-    _checkUserRole();
+    fetchUserRole();
   }
 
   void changeTabIndex(int index) {
     tabIndex.value = index;
   }
 
-  Future<void> _checkUserRole() async {
+  void fetchUserRole() async {
     try {
       final user = supabase.auth.currentUser;
-      if (user != null) {
-        final data =
-            await supabase
-                .from('profiles')
-                .select('role')
-                .eq('id', user.id)
-                .maybeSingle();
+      if (user == null) return;
 
-        if (data != null) {
-          final role = data['role'] as String?;
+      final data =
+          await supabase
+              .from('profiles')
+              .select('role')
+              .eq('id', user.id)
+              .single();
 
-          // Jika role adalah admin atau pengurus, ganti warna
-          if (role == 'admin' || role == 'pengurus') {
-            themeColor.value = const Color(0xFF35BBA4);
-          } else {
-            // Warga tetap warna default (Biru)
-            themeColor.value = const Color(0xFF1E88E5);
-          }
-        }
+      if (data != null && data['role'] != null) {
+        currentRole.value = data['role'];
+        print("Role User: ${currentRole.value}"); // Debug print
       }
     } catch (e) {
-      print("Error cek role: $e");
+      print("Gagal ambil role: $e");
     }
+  }
+
+  // Getter Warna Dinamis
+  Color get themeColor {
+    // List role pengurus
+    final List<String> pengurusRoles = ['ketua_rt', 'ketua_rw', 'admin'];
+
+    // Obx akan mendeteksi perubahan pada `currentRole.value` di sini
+    if (pengurusRoles.contains(currentRole.value)) {
+      return const Color(0xFF35BBA4); // HIJAU TOSCA (Pengurus)
+    } else {
+      return const Color(0xFF1E88E5); // BIRU (Warga)
+    }
+  }
+
+  void onTapAddReport() {
+    // TODO: Navigasi ke halaman buat laporan baru
+    Get.toNamed(AppRoutes.formLaporanScreen);
+
+    CustomSnackBar.show(
+      message: "Info: Fitur Tambah Laporan akan segera hadir!",
+      isError: false,
+    );
   }
 }

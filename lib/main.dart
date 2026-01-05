@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:get/get.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:laporin/app/core/app_export.dart';
 import 'package:laporin/app/core/utils/size.utils.dart';
 import 'package:laporin/app/theme/theme_helper.dart';
@@ -11,7 +12,7 @@ import 'app/routes/app_pages.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await initializeDateFormatting('id_ID', null);
   await dotenv.load(fileName: ".env");
 
   await Supabase.initialize(
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           initialRoute: AppRoutes.SPLASH_SCREEN,
           getPages: AppPages.routes,
+          locale: const Locale('id', 'ID'),
           theme: theme,
         );
       },

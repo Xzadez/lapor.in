@@ -69,7 +69,7 @@ class GenerateCodeController extends GetxController {
         communityId: communityId,
         createdBy: user.id,
         status: 'pending',
-        expiresAt: DateTime.now().add(const Duration(hours: 24)),
+        expiresAt: DateTime.now().toUtc().add(const Duration(hours: 24)),
       );
 
       // 4. SIMPAN KE DB MENGGUNAKAN .toJson()

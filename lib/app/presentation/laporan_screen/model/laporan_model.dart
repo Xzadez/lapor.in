@@ -3,12 +3,13 @@ import 'package:intl/intl.dart';
 class LaporanModel {
   final String id;
   final String tanggal;
-  final String judul;
+  final String judul; // Versi pendek (untuk List)
+  final String deskripsi; // Versi lengkap (untuk Detail) <-- TAMBAH INI
   final String kategori;
   final bool urgent;
   final String imageUrl;
-  final int statusIndex; // Hasil konversi dari text 'status'
-  final bool rejected; // Hasil pengecekan 'status' == 'ditolak'
+  final int statusIndex;
+  final bool rejected;
   final bool cancelled;
   final String? estimasi;
 
@@ -16,6 +17,7 @@ class LaporanModel {
     required this.id,
     required this.tanggal,
     required this.judul,
+    required this.deskripsi, // <-- TAMBAH INI
     required this.kategori,
     required this.urgent,
     required this.imageUrl,
@@ -25,32 +27,31 @@ class LaporanModel {
     this.estimasi,
   });
 
-  // --- FACTORY: MAPPING DATABASE -> UI ---
   factory LaporanModel.fromJson(Map<String, dynamic> json) {
-    // 1. LOGIKA STATUS INDEX & REJECTED
-    // Kita baca text dari database, lalu tentukan angkanya
     String statusDb = json['status'] ?? 'menunggu';
+
+    // Logika Status Index (Sama seperti sebelumnya)
     int idx = 1;
     bool isRejected = false;
     bool isCancelled = false;
 
-    // Mapping Status Text ke Angka Progress Bar
     if (statusDb == 'dibatalkan') {
-      idx = 0; // Paling awal
-      isCancelled = true;
-    }
-    if (statusDb == 'diterima')
-      idx = 1;
-    else if (statusDb == 'diproses')
-      idx = 2;
-    else if (statusDb == 'selesai')
-      idx = 3;
-    else if (statusDb == 'ditolak') {
       idx = 0;
-      isRejected = true; // Jika status ditolak, set flag ini true
+      isCancelled = true;
+    } else if (statusDb == 'menunggu')
+      idx = 1;
+    else if (statusDb == 'diterima')
+      idx = 2;
+    else if (statusDb == 'diproses')
+      idx = 3;
+    else if (statusDb == 'selesai')
+      idx = 4;
+    else if (statusDb == 'ditolak') {
+      idx = 1;
+      isRejected = true;
     }
 
-    // 2. FORMAT TANGGAL (Database ISO -> Format Indo)
+    // Format Tanggal
     String formattedDate = "";
     if (json['tanggal_kejadian'] != null) {
       try {
@@ -61,13 +62,10 @@ class LaporanModel {
       }
     }
 
-    // 3. LOGIKA PRIORITY (URGENT)
-    // Jika priority dari DB adalah 'tinggi' atau 'high', anggap urgent
-    bool isUrgent =
-        (json['priority'] == 'tinggi' || json['priority'] == 'high');
-
-    // 4. JUDUL (Potong Deskripsi jika kepanjangan)
+    // LOGIKA DESKRIPSI
     String deskripsiFull = json['deskripsi'] ?? '-';
+
+    // Buat Judul Singkat (hanya untuk tampilan List Card)
     String judulSingkat =
         deskripsiFull.length > 30
             ? "${deskripsiFull.substring(0, 30)}..."
@@ -76,15 +74,15 @@ class LaporanModel {
     return LaporanModel(
       id: json['id'],
       tanggal: formattedDate,
-      judul: judulSingkat, // Kita pakai deskripsi sebagai judul card
+      judul: judulSingkat, // Masukkan yang pendek
+      deskripsi: deskripsiFull, // Masukkan yang FULL
       kategori: json['kategori'] ?? 'Umum',
-      urgent: isUrgent,
-      // Placeholder jika foto kosong/error URL
+      urgent: (json['priority'] == 'tinggi' || json['priority'] == 'high'),
       imageUrl: json['foto_url'] ?? 'https://via.placeholder.com/300',
       statusIndex: idx,
       rejected: isRejected,
       cancelled: isCancelled,
-      estimasi: json['estimasi'], // Kolom baru yang kita buat tadi
+      estimasi: json['estimasi'],
     );
   }
 }

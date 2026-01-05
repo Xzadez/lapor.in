@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:laporin/app/widgets/custom_snackbar.dart';
+import 'package:laporin/app/presentation/laporan_screen/model/laporan_model.dart'; // Import Model
 import '../../routes/app_routes.dart';
 import 'controller/home_controller.dart';
 
@@ -15,34 +15,89 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 100),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildHeader(),
-              const SizedBox(height: 16),
-              _buildCarousel(controller, width),
-              const SizedBox(height: 16),
-              const Center(
-                child: Text(
-                  "Silahkan klik ikon '+' untuk tambah laporan",
-                  style: TextStyle(fontSize: 13, color: Colors.black87),
-                  textAlign: TextAlign.center,
+        child: RefreshIndicator(
+          onRefresh: controller.fetchLaporanTerkini, // Tarik untuk refresh data
+          color: const Color(0xFF35BBA4),
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 100),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildHeader(),
+                const SizedBox(height: 16),
+                _buildCarousel(controller, width),
+                const SizedBox(height: 16),
+                // --- HEADER SECTION LAPORAN TERKINI ---
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [
+                    Text(
+                      "Laporan Terkini", // Ganti Judul
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      "Status: Selesai",
+                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
+                  ],
                 ),
-              ),
-              const SizedBox(height: 16),
-              _buildTambahLaporanBox(),
-              const SizedBox(height: 24),
 
-              const Text(
-                "Berita Terkini",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
+                const SizedBox(height: 8),
 
-              const SizedBox(height: 12),
-              _buildBeritaTerkiniCard(),
-            ],
+                // --- LIST LAPORAN TERKINI (OBX) ---
+                Obx(() {
+                  if (controller.isLoading.value) {
+                    return const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(20.0),
+                        child: CircularProgressIndicator(
+                          color: Color(0xFF35BBA4),
+                        ),
+                      ),
+                    );
+                  }
+
+                  if (controller.laporanTerkini.isEmpty) {
+                    return Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[100],
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Column(
+                        children: const [
+                          Icon(
+                            Icons.check_circle_outline,
+                            color: Colors.grey,
+                            size: 40,
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            "Belum ada laporan selesai.",
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
+                  return Column(
+                    children:
+                        controller.laporanTerkini.map((laporan) {
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: _buildLaporanTerkiniCard(laporan),
+                          );
+                        }).toList(),
+                  );
+                }),
+              ],
+            ),
           ),
         ),
       ),
@@ -147,10 +202,11 @@ class HomeScreen extends StatelessWidget {
   }
 
   // ========================= BERITA TERKINI CARD =========================
-  Widget _buildBeritaTerkiniCard() {
+  Widget _buildLaporanTerkiniCard(LaporanModel data) {
     return GestureDetector(
       onTap: () {
-        Get.toNamed(AppRoutes.detailLaporanScreen);
+        // Klik untuk lihat detail
+        Get.toNamed(AppRoutes.detailLaporanScreen, arguments: data);
       },
       child: Container(
         padding: const EdgeInsets.all(12),
@@ -168,34 +224,61 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "20 Oktober 2025",
-              style: TextStyle(fontSize: 11, color: Colors.grey),
+            // Tanggal
+            Text(
+              data.tanggal,
+              style: const TextStyle(fontSize: 11, color: Colors.grey),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 6),
 
-            const Text(
-              "Judul Laporan",
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+            // Judul (Deskripsi Singkat)
+            Text(
+              data.judul,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
             ),
 
-            const SizedBox(height: 8),
+            const SizedBox(height: 10),
+
+            // Baris Badge
             Row(
               children: [
-                _buildBadge("Urgent", Colors.red),
-                const SizedBox(width: 8),
-                _buildBadge("Kategori", Colors.green),
+                // 1. Badge URGENT (Prioritas)
+                if (data.urgent) ...[
+                  _buildBadge("URGENT", Colors.red),
+                  const SizedBox(width: 8),
+                ],
+
+                // 2. Badge Kategori
+                _buildBadge(data.kategori, const Color(0xFF35BBA4)),
+
+                const Spacer(),
+
+                // 3. Indikator Selesai
+                Row(
+                  children: const [
+                    Icon(Icons.check_circle, size: 16, color: Colors.blue),
+                    SizedBox(width: 4),
+                    Text(
+                      "Selesai",
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
-
-            const SizedBox(height: 12),
           ],
         ),
       ),
     );
   }
 
-  // ========================= BADGE =========================
+  // Helper Badge
   Widget _buildBadge(String text, Color color) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -204,11 +287,11 @@ class HomeScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
-        text,
+        text.toUpperCase(),
         style: TextStyle(
           color: color,
-          fontSize: 11,
-          fontWeight: FontWeight.w600,
+          fontSize: 10,
+          fontWeight: FontWeight.w700,
         ),
       ),
     );

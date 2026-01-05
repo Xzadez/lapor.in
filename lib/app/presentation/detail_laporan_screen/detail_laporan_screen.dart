@@ -2,32 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'controller/detail_laporan_controller.dart';
 
-class DetailLaporanScreen extends StatelessWidget {
+class DetailLaporanScreen extends GetView<DetailLaporanController> {
   const DetailLaporanScreen({super.key});
 
+  // Helper Warna Status
   Color _getStatusColor(String status) {
-    switch (status.toUpperCase()) {
-      case "DITERIMA":
+    switch (status) {
+      case "SELESAI":
         return Colors.green;
       case "DIPROSES":
+      case "DITERIMA":
         return Colors.blue;
+      case "MENUNGGU":
+        return Colors.orange;
       case "DITOLAK":
+        return const Color(0xFFFF5252); // Merah
+      case "DIBATALKAN":
+        return Colors.grey;
       default:
-        // Warna merah agak soft/pastel sesuai gambar
-        return const Color(0xFFFF5252);
+        return const Color(0xFF35BBA4); // Tosca Default
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<DetailLaporanController>();
-
     return Scaffold(
       backgroundColor: Colors.white,
-      // 1. APP BAR PUTIH
       appBar: AppBar(
         backgroundColor: Colors.white,
-        elevation: 0, // Hilangkan bayangan agar terlihat flat
+        elevation: 0,
         centerTitle: true,
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -43,7 +46,7 @@ class DetailLaporanScreen extends StatelessWidget {
                 color: Colors.black,
               ),
               onPressed: () => Get.back(),
-              padding: EdgeInsets.zero, // Agar icon pas di tengah lingkaran
+              padding: EdgeInsets.zero,
             ),
           ),
         ),
@@ -57,28 +60,38 @@ class DetailLaporanScreen extends StatelessWidget {
         ),
       ),
       body: Obx(() {
-        final laporan = controller.laporan;
-        final status = controller.status.value;
-        final alasan = controller.alasan.value;
-        final themeColor = _getStatusColor(status);
+        // Ambil data dari Controller
+        final data = controller.laporanData;
+
+        // Jika data belum load (misal null), tampilkan loading/kosong
+        if (data.isEmpty)
+          return const Center(child: CircularProgressIndicator());
+
+        final statusText = controller.statusLabel.value;
+        final statusDesc = controller.statusDesc.value;
+        final themeColor = _getStatusColor(statusText);
 
         return SingleChildScrollView(
           child: Stack(
             children: [
               // ------------------------------------------------
-              // LAYER 1: Header Image & Text (Background Merah)
+              // LAYER 1: Header Image & Status (Background Warna Dinamis)
               // ------------------------------------------------
               Container(
-                height: 350, // Tinggi area merah
+                height: 350,
                 width: double.infinity,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: NetworkImage(laporan["gambar"] ?? ""),
+                    image: NetworkImage(
+                      data["gambar"] ?? 'https://via.placeholder.com/400',
+                    ),
                     fit: BoxFit.cover,
+                    // Handle error image loading
+                    onError: (exception, stackTrace) {},
                   ),
                 ),
                 child: Container(
-                  // Overlay Warna
+                  // Overlay Warna Dinamis
                   decoration: BoxDecoration(
                     color: themeColor.withOpacity(0.85),
                   ),
@@ -89,8 +102,9 @@ class DetailLaporanScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      // STATUS UTAMA (DITOLAK/DIPROSES/DLL)
                       Text(
-                        status.toUpperCase(),
+                        statusText,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 24,
@@ -99,28 +113,16 @@ class DetailLaporanScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 12),
-                      RichText(
-                        text: TextSpan(
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            height: 1.4,
-                          ),
-                          children: [
-                            TextSpan(
-                              text:
-                                  "Alasan ${status == 'DITOLAK' ? 'Ditolak' : 'Status'} adalah ",
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            TextSpan(
-                              text: alasan,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ],
+
+                      // KETERANGAN / ALASAN / ESTIMASI
+                      Text(
+                        statusDesc,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          height: 1.4,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ],
@@ -129,11 +131,9 @@ class DetailLaporanScreen extends StatelessWidget {
               ),
 
               // ------------------------------------------------
-              // LAYER 2: Konten Putih (Overlap ke atas)
+              // LAYER 2: Konten Putih (Detail)
               // ------------------------------------------------
               Container(
-                // Margin atas untuk mendorong container putih ke bawah
-                // tapi membiarkannya menumpuk sedikit di atas area merah
                 margin: const EdgeInsets.only(top: 300),
                 width: double.infinity,
                 decoration: const BoxDecoration(
@@ -150,55 +150,78 @@ class DetailLaporanScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Tags
+                    // Tags (Urgent & Kategori)
                     Row(
                       children: [
-                        _buildTag(laporan["urgensi"]!, const Color(0xFFFF5252)),
-                        const SizedBox(width: 12),
+                        if (data["urgensi"] == "Urgent")
+                          Padding(
+                            padding: const EdgeInsets.only(right: 12),
+                            child: _buildTag("URGENT", const Color(0xFFFF5252)),
+                          ),
                         _buildTag(
-                          laporan["kategori"]!,
+                          data["kategori"] ?? "Umum",
                           const Color(0xFF4DB6AC),
                         ),
                       ],
                     ),
                     const SizedBox(height: 20),
 
-                    // Judul Laporan
-                    Text(
-                      laporan["judul"]!,
-                      style: const TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-
-                    // Pengirim & Waktu
+                    // Waktu & Pengirim
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          laporan["pengirim"]!,
-                          style: TextStyle(
-                            color: Colors.grey[400],
-                            fontSize: 14,
-                          ),
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.person,
+                              size: 16,
+                              color: Colors.grey,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              data["pengirim"] ?? "-",
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 13,
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          laporan["waktu"]!,
-                          style: TextStyle(
-                            color: Colors.grey[400],
-                            fontSize: 14,
-                          ),
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.calendar_today,
+                              size: 14,
+                              color: Colors.grey,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              data["waktu"] ?? "-",
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 13,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                    const SizedBox(height: 24),
 
-                    // Deskripsi
+                    const SizedBox(height: 20),
+                    const Divider(),
+                    const SizedBox(height: 16),
+
+                    // Deskripsi (Judul dijadikan Isi)
+                    const Text(
+                      "Deskripsi Laporan",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
                     Text(
-                      laporan["deskripsi"]!,
+                      data["deskripsi"] ?? "-",
                       textAlign: TextAlign.justify,
                       style: const TextStyle(
                         color: Colors.black87,
@@ -206,7 +229,7 @@ class DetailLaporanScreen extends StatelessWidget {
                         height: 1.6,
                       ),
                     ),
-                    const SizedBox(height: 50), // Spasi bawah tambahan
+                    const SizedBox(height: 50),
                   ],
                 ),
               ),
@@ -217,7 +240,6 @@ class DetailLaporanScreen extends StatelessWidget {
     );
   }
 
-  // Widget Tag
   Widget _buildTag(String text, Color color) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
@@ -226,7 +248,7 @@ class DetailLaporanScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
-        text,
+        text.toUpperCase(),
         style: const TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.w600,

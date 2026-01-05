@@ -1,21 +1,62 @@
 import 'package:get/get.dart';
+import 'package:laporin/app/presentation/laporan_screen/model/laporan_model.dart';
 
 class DetailLaporanController extends GetxController {
-  // Observable variables
-  var status = "DITOLAK".obs;
-  var alasan = "Ditolak sudah ada laporan serupa".obs;
+  var laporanData = <String, dynamic>{}.obs;
+  var statusLabel = "".obs;
+  var statusDesc = "".obs;
 
-  var laporan =
-      {
-        "kategori": "Kategori",
-        "urgensi": "Urgent",
-        "judul": "Lampu jalan",
-        "pengirim": "Nama Pengirim",
-        "waktu": "1 Menit yang lalu",
-        // Menggunakan teks panjang sesuai gambar
-        "deskripsi":
-            "Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.\n\nLorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.",
-        "gambar":
-            "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80", // Gambar kantor/kerja
-      }.obs;
+  @override
+  void onInit() {
+    super.onInit();
+    if (Get.arguments != null && Get.arguments is LaporanModel) {
+      LaporanModel data = Get.arguments;
+      _mapDataToView(data);
+    }
+  }
+
+  void _mapDataToView(LaporanModel data) {
+    // 1. Label Status
+    String status = "MENUNGGU";
+    if (data.cancelled)
+      status = "DIBATALKAN";
+    else if (data.rejected)
+      status = "DITOLAK";
+    else if (data.statusIndex == 2)
+      status = "DITERIMA";
+    else if (data.statusIndex == 3)
+      status = "DIPROSES";
+    else if (data.statusIndex == 4)
+      status = "SELESAI";
+
+    statusLabel.value = status;
+
+    // 2. Alasan/Pesan
+    if (data.estimasi != null && data.estimasi!.isNotEmpty) {
+      statusDesc.value = data.estimasi!;
+    } else {
+      if (status == "MENUNGGU")
+        statusDesc.value = "Laporan sedang ditinjau oleh petugas.";
+      else if (status == "DITOLAK")
+        statusDesc.value = "Laporan tidak memenuhi kriteria.";
+      else if (status == "SELESAI")
+        statusDesc.value = "Laporan telah ditangani.";
+      else
+        statusDesc.value = "Sedang dalam pengerjaan.";
+    }
+
+    // 3. Masukkan ke Map UI
+    laporanData.value = {
+      "judul": data.judul, // Judul tetap singkat (di header detail)
+      "kategori": data.kategori,
+      "urgensi": data.urgent ? "Urgent" : "Normal",
+      "pengirim": "Saya",
+      "waktu": data.tanggal,
+
+      // PERBAIKAN DI SINI:
+      "deskripsi": data.deskripsi, // Gunakan deskripsi FULL, bukan judul
+
+      "gambar": data.imageUrl,
+    };
+  }
 }

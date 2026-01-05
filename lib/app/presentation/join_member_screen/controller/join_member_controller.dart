@@ -55,7 +55,7 @@ class JoinMemberController extends GetxController {
   void onTapInputCode() {
     // Arahkan ke halaman Form Input yang tadi kita bahas
     // Kita namakan rute-nya: AppRoutes.inputCodeScreen
-    // Get.toNamed(AppRoutes.inputCodeScreen);
+    Get.toNamed(AppRoutes.inputCodeScreen);
   }
 
   @override

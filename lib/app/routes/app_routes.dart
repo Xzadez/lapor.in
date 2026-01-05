@@ -1,6 +1,4 @@
-// File: app/routes/app_routes.dart
 abstract class AppRoutes {
-  // Menggunakan 'abstract class' agar tidak bisa diinstansiasi
   AppRoutes._();
 
   static const initialRoute = '/';
@@ -28,4 +26,5 @@ abstract class AppRoutes {
   static const formLaporanScreen = '/form_laporan_screen';
   static const pengurusBeranda = '/pengurus-beranda';
   static const pengurusLaporan = '/pengurus-laporan';
+  static const inputCodeScreen = '/input_code_screen';
 }

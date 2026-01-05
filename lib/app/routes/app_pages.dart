@@ -8,6 +8,8 @@ import 'package:laporin/app/presentation/create_member_screen/binding/create_mem
 import 'package:laporin/app/presentation/create_member_screen/create_member_screen.dart';
 import 'package:laporin/app/presentation/generate_code/binding/generate_code_binding.dart';
 import 'package:laporin/app/presentation/generate_code/generate_code_screen.dart';
+import 'package:laporin/app/presentation/input_code_screen/binding/input_code_binding.dart';
+import 'package:laporin/app/presentation/input_code_screen/input_code_screen.dart';
 import 'package:laporin/app/presentation/join_member_screen/binding/join_member_binding.dart';
 import 'package:laporin/app/presentation/join_member_screen/join_member_screen.dart';
 import 'package:laporin/app/presentation/login_screen/binding/login_binding.dart';
@@ -88,6 +90,11 @@ class AppPages {
       name: AppRoutes.jointMember,
       page: () => const JoinMemberScreen(),
       binding: JoinMemberBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.inputCodeScreen,
+      page: () => const InputCodeScreen(),
+      binding: InputCodeBinding(),
     ),
     GetPage(
       name: AppRoutes.createMember,
